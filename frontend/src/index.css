@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .underline-link {
+    @apply text-xl hover:text-gray-500 relative duration-300 after:content-[''] after:bg-[#ffafcc] after:absolute after:h-[3px] after:w-[0%] after:left-0 after:-bottom-[5px] after:rounded-xl after:transition-all after:duration-300 hover:after:w-[100%];
+  }
+
+  .hamburger.active > .span_1 {
+    @apply transition-transform duration-300 ease-in-out rounded rotate-45 origin-top-left translate-y-1 -translate-x-1;
+  }
+  .hamburger.active > .span_2 {
+    @apply opacity-0;
+  }
+  .hamburger.active > .span_3 {
+    @apply transition-transform duration-300 ease-in-out -rotate-45 origin-bottom-left -translate-x-1;
+  }
+}
+
+@layer components {
+  .navbar {
+    @apply absolute md:static bg-[#cdb4db] md:bg-transparent min-h-[92vh] md:min-h-0 left-0 top-[8%] md:top-0 w-[60%] md:w-auto items-start md:items-center px-5 md:px-0 flex flex-col md:flex-row gap-8 md:gap-[4vw];
+  }
+  .button {
+    @apply bg-[#ffc8dd] rounded-full shadow-md px-3 py-0.5 font-semibold hover:bg-[#ffafcc] transition-colors duration-300;
+  }
+
+  .modal {
+    @apply pointer-events-none invisible fixed flex cursor-pointer items-end justify-center overflow-hidden overscroll-contain opacity-0 transition-all duration-300 ease-in-out peer-checked:pointer-events-auto peer-checked:visible peer-checked:opacity-100 peer-checked:[&>*]:translate-y-0 peer-checked:[&>*]:scale-100 right-0 top-[82px] mr-2 mt-2;
+  }
+}
