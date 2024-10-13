@@ -13,7 +13,9 @@ const NavWrapper = () => {
       <header className="bg-[#cdb4db]">
         <nav className="flex justify-between items-center p-5 w-[92%] mx-auto">
           <div>
-            <h1 className="relative font-bold font-mono text-3xl">OSV2</h1>
+            <h1 className="relative font-bold font-mono text-3xl">
+              {isCheck ? "" : "OSV2"}
+            </h1>
           </div>
           <div
             className={
@@ -23,6 +25,15 @@ const NavWrapper = () => {
             }
           >
             <ul className="flex flex-col md:flex-row md:items-center gap-8 md:gap-[4vw]">
+              {isCheck ? (
+                <li>
+                  <h1 className="font-bold font-mono text-3xl mb-2">
+                    {isCheck ? "OSV2" : ""}
+                  </h1>
+                </li>
+              ) : (
+                ""
+              )}
               <li>
                 <a className="underline-link" href="#">
                   Marketplace
@@ -111,13 +122,13 @@ const NavWrapper = () => {
                 id="user-modal1"
                 className="peer fixed appearance-none opacity-0"
               />
-              <label htmlFor="user-modal1" className="modal">
+              <label htmlFor="user-modal1" className="modal z-10">
                 <label
                   htmlFor="user-modal1"
-                  className="h-fit w-64 scale-90 overflow-y-auto overscroll-contain rounded-lg bg-[#ffc8dd] p-6 text-black shadow-2xl transition"
+                  className="h-fit w-64 scale-90 overflow-y-auto overscroll-contain rounded-lg bg-[#ffc8dd] p-6 text-black shadow-2xl transition "
                 >
                   <h3 className="text-lg font-bold">osas</h3>
-                  <p className="py-4">
+                  <p className="py-4 ">
                     Lorem ipsum, dolor sit amet consectetur adipisicing elit.
                   </p>
                 </label>
