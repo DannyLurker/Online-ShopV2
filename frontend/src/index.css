@@ -27,6 +27,6 @@
   }
 
   .modal {
-    @apply pointer-events-none invisible fixed flex cursor-pointer items-end justify-center overflow-hidden overscroll-contain opacity-0 transition-all duration-300 ease-in-out peer-checked:pointer-events-auto peer-checked:visible peer-checked:opacity-100 peer-checked:[&>*]:translate-y-0 peer-checked:[&>*]:scale-100 right-0 top-[82px] mr-2 mt-2;
+    @apply pointer-events-none invisible fixed flex z-10 cursor-pointer items-end justify-center overflow-hidden overscroll-contain opacity-0 transition-all duration-300 ease-in-out peer-checked:pointer-events-auto peer-checked:visible peer-checked:opacity-100 peer-checked:[&>*]:translate-y-0 peer-checked:[&>*]:scale-100 right-0 top-[82px] mr-2 mt-2;
   }
 }

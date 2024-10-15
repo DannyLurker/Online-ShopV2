@@ -10,8 +10,8 @@ const NavWrapper = () => {
   }
 
   return (
-    <div className="bg-gradient-to-t from-[#a2d2ff] to-[#bde0fe] min-h-screen h-full">
-      <header className="bg-[#cdb4db]">
+    <div className="bg-gradient-to-t from-[#a2d2ff] to-[#bde0fe] min-h-screen h-full pt-16">
+      <header className="fixed top-0 left-0 w-full bg-[#cdb4db] z-20">
         <nav className="flex justify-between items-center p-5 w-[92%] mx-auto">
           <div>
             <h1 className="relative font-bold font-mono text-3xl">
@@ -100,7 +100,7 @@ const NavWrapper = () => {
             </div>
           </div>
 
-          <div className="md:hidden flex hamburger mr-1 cursor-pointer ">
+          <div className="md:hidden flex hamburger mr-1 cursor-pointer">
             <div>
               <label htmlFor="user-modal1" className="cursor-pointer">
                 <svg
