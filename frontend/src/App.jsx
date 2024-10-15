@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, lazy } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import NavWrapper from "./components/NavWrapper";
-import HomePage from "./components/HomePage";
+
+const NavWrapper = lazy(() => import("./components/NavWrapper"));
+const HomePage = lazy(() => import("./components/HomePage"));
 
 function App() {
   return (

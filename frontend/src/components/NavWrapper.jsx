@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, Suspense } from "react";
 import { Outlet } from "react-router-dom";
+import Spinner from "./Spinner";
 
 const NavWrapper = () => {
   const [isCheck, setIsCheck] = useState(false);
@@ -9,7 +10,7 @@ const NavWrapper = () => {
   }
 
   return (
-    <div className="bg-gradient-to-t from-[#a2d2ff] to-[#bde0fe] h-screen">
+    <div className="bg-gradient-to-t from-[#a2d2ff] to-[#bde0fe] min-h-screen h-full">
       <header className="bg-[#cdb4db]">
         <nav className="flex justify-between items-center p-5 w-[92%] mx-auto">
           <div>
@@ -150,7 +151,9 @@ const NavWrapper = () => {
         </nav>
       </header>
       <div>
-        <Outlet />
+        <Suspense fallback={<Spinner />}>
+          <Outlet />
+        </Suspense>
       </div>
     </div>
   );
