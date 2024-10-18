@@ -1,0 +1,2 @@
+- Create a simple CRUD project with an online shop theme
+- This project has been done before but it didn't go well, so I decided to stop working on it and focus on re-learning, and starting a new project with the same concept.
