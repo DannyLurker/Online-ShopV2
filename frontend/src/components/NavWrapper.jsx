@@ -10,8 +10,8 @@ const NavWrapper = () => {
   }
 
   return (
-    <div className="bg-gradient-to-t from-[#a2d2ff] to-[#bde0fe] min-h-screen h-full pt-16">
-      <header className="fixed top-0 left-0 w-full bg-[#cdb4db] z-20">
+    <div className="bg-gradient-to-t from-[#a2d2ff] to-[#bde0fe] min-h-screen h-full">
+      <header className="w-full bg-[#cdb4db] z-20">
         <nav className="flex justify-between items-center p-5 w-[92%] mx-auto">
           <div>
             <h1 className="relative font-bold font-mono text-3xl">
@@ -55,14 +55,18 @@ const NavWrapper = () => {
                   History
                 </a>
                 <button className="block md:hidden mt-8 button">
-                  <h2>Sign In</h2>
+                  <h2>
+                    <a href="/signup">Sign In</a>
+                  </h2>
                 </button>
               </li>
             </ul>
           </div>
           <div className="hidden md:flex">
-            <button className="button mr-2">
-              <h2>Sign In</h2>
+            <button className="block button">
+              <h2>
+                <a href="/signup">Sign In</a>
+              </h2>
             </button>
             <div>
               <label htmlFor="user-modal" className="cursor-pointer">
