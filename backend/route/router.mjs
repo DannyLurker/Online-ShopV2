@@ -81,7 +81,7 @@ Router.post(
       newUser.save();
       return res
         .status(201)
-        .json({ message: "Data successful created and stored" });
+        .json({ message: "Data successfully created and stored" });
     } catch (e) {
       console.log(`error: ${e.message}`);
     }
@@ -89,19 +89,33 @@ Router.post(
 );
 
 // LOGIN ROUTE FOR SEND DATA
-Router.post(`/login`, (req, res) => {
-  const { name, password } = req.body;
+Router.post(`/login`, async (req, res) => {
+  try {
+    const { email, password } = req.body;
 
-  const accessToken = generateAccessToken(userData);
+    const user = await userLoginModel.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
 
-  res.cookie(`jwt`, accessToken, {
-    httpOnly: true,
-    secure: true,
-    maxAge: 24 * 60 * 60 * 1000,
-    sameSite: "strict",
-  });
+    const accessToken = generateAccessToken(email);
 
-  res.json(accessToken);
+    const isPasswordValid = bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(403).json({ message: "Password or email is wrong" });
+    }
+
+    res.cookie(`jwt`, accessToken, {
+      httpOnly: true,
+      secure: true,
+      maxAge: 24 * 60 * 60 * 1000,
+      sameSite: "strict",
+    });
+
+    res.status(202).json({ message: "User succefully login" });
+  } catch (e) {
+    console.log(`error: ${e.message}`);
+  }
 });
 
 //LOGOUT

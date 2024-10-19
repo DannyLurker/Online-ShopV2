@@ -8,9 +8,14 @@ const Signup = () => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
-      axios.post(`http://localhost:3000/signup`, { name, email, password });
+      await axios.post(`http://localhost:3000/signup`, {
+        name,
+        email,
+        password,
+      });
       navigate(`/login`);
     } catch (e) {
       console.log(e);
