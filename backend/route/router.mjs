@@ -1,6 +1,9 @@
 import express from "express";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import bcrypt from "bcrypt";
+import { body, validationResult } from "express-validator";
+import { userLoginModel } from "../model/model.mjs";
 
 // INITIALIZE EXPRESS
 const Router = express.Router();
@@ -31,28 +34,63 @@ const authenticate = (req, res, next) => {
   });
 };
 
-// SERVER
-const data = [
-  {
-    name: `enji`,
-    id: 1,
-  },
-  {
-    name: `ronaldo`,
-    id: 2,
-  },
-];
-
-// ROUTE FOR GET DATA
+// HOME ROUTE FOR GET DATA
 Router.get(`/`, authenticate, (req, res) => {
   const filteredData = data.filter((user) => user.name === req.user);
 
   res.json(filteredData);
 });
 
-// ROUTE FOR SEND DATA
+// SIGNUP ROUTE FOR SEND DATA
+Router.post(
+  `/signup`,
+  body("email").isEmail().withMessage("Email isn't valid.").normalizeEmail(),
+
+  // Validasi password
+  body("password")
+    .isLength({ min: 8 })
+    .withMessage("The password must contain at least 8 characters.")
+    .matches(/\d/)
+    .withMessage("Password must contain number at least 1.")
+    .matches(/[!@#$%^&*(),.?":{}|<>]/)
+    .withMessage("Password must contain symbol at least 1."),
+
+  // Validasi username
+  body("name")
+    .notEmpty()
+    .withMessage("Username cant be empty.")
+    .isLength({ min: 3 })
+    .withMessage("The username must contain at least 3 characters"),
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    try {
+      const { name, email, password } = req.body;
+      const saltRounds = 16;
+      const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+      const newUser = new userLoginModel({
+        name: name,
+        email: email,
+        password: hashedPassword,
+      });
+
+      newUser.save();
+      return res
+        .status(201)
+        .json({ message: "Data successful created and stored" });
+    } catch (e) {
+      console.log(`error: ${e.message}`);
+    }
+  }
+);
+
+// LOGIN ROUTE FOR SEND DATA
 Router.post(`/login`, (req, res) => {
-  const userData = req.body.name;
+  const { name, password } = req.body;
 
   const accessToken = generateAccessToken(userData);
 
@@ -66,6 +104,7 @@ Router.post(`/login`, (req, res) => {
   res.json(accessToken);
 });
 
+//LOGOUT
 Router.delete(`/logout`, (req, res) => {
   res.clearCookie(`jwt`);
   res.status(200).json({ message: `User successfull logged out` });

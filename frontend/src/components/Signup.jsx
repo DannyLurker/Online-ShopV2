@@ -1,6 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+
+  const handleSubmit = () => {
+    try {
+      axios.post(`http://localhost:3000/signup`, { name, email, password });
+      navigate(`/login`);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   return (
     <div className="bg-gradient-to-t from-[#a2d2ff] to-[#bde0fe] min-h-screen flex justify-center items-center">
       <div className="bg-[#cdb4db] w-[250px] h-[320px] rounded-md shadow-md opacity-75 p-2">
@@ -14,13 +30,15 @@ const Signup = () => {
           </p>
         </div>
         <div className="flex justify-center text-center mt-4">
-          <form>
+          <form onSubmit={handleSubmit}>
             <input
               type="text"
               className="bg-[#cdb4db] placeholder-gray-500 outline-none border-b-2 border-gray-500 mb-5 invalid:focus:border-red-600 "
               placeholder="Name..."
               required
               minLength={3}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
             />
             <input
               type="email"
@@ -28,6 +46,8 @@ const Signup = () => {
               placeholder="Email..."
               required
               minLength={3}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
             <input
               type="password"
@@ -35,6 +55,8 @@ const Signup = () => {
               placeholder="Password..."
               required
               minLength={8}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
             <button
               type="sumbit"
