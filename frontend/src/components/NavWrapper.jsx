@@ -1,6 +1,7 @@
 import React, { useState, Suspense } from "react";
 import { Outlet } from "react-router-dom";
 import Spinner from "./Spinner";
+import { Link } from "react-router-dom";
 
 const NavWrapper = () => {
   const [isCheck, setIsCheck] = useState(false);
@@ -10,31 +11,22 @@ const NavWrapper = () => {
   }
 
   return (
-    <div className="bg-gradient-to-t from-[#a2d2ff] to-[#bde0fe] min-h-screen h-full">
-      <header className="w-full bg-[#cdb4db] z-20">
+    <div className="bg-gradient-to-t from-[#a2d2ff] to-[#bde0fe] min-h-screen h-full pt-16">
+      <header className="fixed top-0 left-0 w-full bg-[#cdb4db] z-20">
         <nav className="flex justify-between items-center p-5 w-[92%] mx-auto">
           <div>
-            <h1 className="relative font-bold font-mono text-3xl">
-              {isCheck ? "" : "OSV2"}
-            </h1>
+            <Link to="/">
+              <h1 className="relative font-bold font-mono text-3xl">OSV2</h1>
+            </Link>
           </div>
           <div
             className={
               isCheck
-                ? "top-[8%] navbar z-10 transition-all duration-500"
-                : "top-[-100%] navbar transition-all duration-500"
+                ? "left-[0%] top-[100%] navbar z-10 transition-all duration-500"
+                : "left-[-100%] top-[100%] navbar transition-all duration-500"
             }
           >
             <ul className="flex flex-col md:flex-row md:items-center gap-8 md:gap-[4vw]">
-              {isCheck ? (
-                <li>
-                  <h1 className="font-bold font-mono text-3xl mb-2">
-                    {isCheck ? "OSV2" : ""}
-                  </h1>
-                </li>
-              ) : (
-                ""
-              )}
               <li>
                 <a className="underline-link" href="#">
                   Marketplace
@@ -63,7 +55,7 @@ const NavWrapper = () => {
             </ul>
           </div>
           <div className="hidden md:flex">
-            <button className="block button">
+            <button className="block button mr-2">
               <h2>
                 <a href="/signup">Sign In</a>
               </h2>
