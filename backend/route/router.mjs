@@ -69,6 +69,13 @@ Router.post(
 
     try {
       const { name, email, password } = req.body;
+
+      const findUser = await userLoginModel.findOne({ email });
+
+      if (findUser) {
+        return res.status(409).json({ message: "Email has been used" });
+      }
+
       const saltRounds = 16;
       const hashedPassword = await bcrypt.hash(password, saltRounds);
 
