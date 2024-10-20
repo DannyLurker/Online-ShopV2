@@ -8,8 +8,14 @@ const app = express();
 const PORT = 3000;
 
 //MIDDLEWARE
+const CLIENT_ORIGIN = "http://localhost:5173";
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: CLIENT_ORIGIN,
+    credentials: true,
+  })
+);
 app.use(cookieParser());
 
 //SERVER

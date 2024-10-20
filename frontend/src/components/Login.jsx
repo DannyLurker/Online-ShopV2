@@ -1,7 +1,6 @@
-import { React, useState } from "react";
+import React, { useState } from "react";
 import { FaArrowLeft } from "react-icons/fa";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Login = () => {
@@ -13,14 +12,15 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      await axios.post(`http://localhost:3000/login`, {
-        email,
-        password,
-      });
+      await axios.post(
+        "http://localhost:3000/login",
+        { email, password },
+        { withCredentials: true }
+      );
 
       navigate("/");
     } catch (e) {
-      console.error("Error:", e);
+      console.error("Error:", e.response?.data || e.message);
     }
   };
 
@@ -30,7 +30,7 @@ const Login = () => {
         <div className="flex justify-center mt-2 flex-col text-center px-2 mb-3">
           <h1 className="text-3xl font-bold ">Login</h1>
           <p>
-            Don't Have an Account yet ?
+            Don't Have an Account yet?{" "}
             <a href="/signup" className="text-blue-500">
               Sign Up
             </a>

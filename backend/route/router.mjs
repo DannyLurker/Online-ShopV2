@@ -1,5 +1,7 @@
 import express from "express";
 import jwt from "jsonwebtoken";
+import cookieParser from "cookie-parser";
+import cors from "cors";
 import dotenv from "dotenv";
 import bcrypt from "bcrypt";
 import { body, validationResult } from "express-validator";
@@ -7,6 +9,17 @@ import { userLoginModel } from "../model/model.mjs";
 
 // INITIALIZE EXPRESS
 const Router = express.Router();
+
+// MIDDLEWARE
+const CLIENT_ORIGIN = "http://localhost:5173";
+Router.use(
+  cors({
+    origin: CLIENT_ORIGIN,
+    credentials: true,
+  })
+);
+Router.use(cookieParser());
+Router.use(express.json());
 
 // ENV
 dotenv.config();
@@ -19,7 +32,6 @@ const generateAccessToken = (user) => {
 //MIDDLEWARE AUTH JWT
 const authenticate = (req, res, next) => {
   const token = req.cookies.jwt;
-
   if (!token) {
     return res.status(401).json({ message: "Token is unavailable" });
   }
@@ -30,15 +42,29 @@ const authenticate = (req, res, next) => {
     }
 
     req.user = user;
+
     next();
   });
 };
 
 // HOME ROUTE FOR GET DATA
-Router.get(`/`, authenticate, (req, res) => {
-  const filteredData = data.filter((user) => user.name === req.user);
+Router.get(`/`, authenticate, async (req, res) => {
+  try {
+    const userEmail = req.user.email;
 
-  res.json(filteredData);
+    const findUser = await userLoginModel.findOne({ email: userEmail });
+
+    if (!findUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json({
+      name: findUser.name,
+      email: findUser.email,
+    });
+  } catch (e) {
+    console.log(`error: ${e.message}`);
+  }
 });
 
 // SIGNUP ROUTE FOR SEND DATA
@@ -105,23 +131,24 @@ Router.post(`/login`, async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    const accessToken = generateAccessToken(email);
-
-    const isPasswordValid = bcrypt.compare(password, user.password);
+    const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
       return res.status(403).json({ message: "Password or email is wrong" });
     }
 
-    res.cookie(`jwt`, accessToken, {
+    const accessToken = generateAccessToken({ email: user.email });
+
+    res.cookie("jwt", accessToken, {
       httpOnly: true,
       secure: true,
-      maxAge: 24 * 60 * 60 * 1000,
       sameSite: "strict",
+      maxAge: 24 * 60 * 60 * 1000,
     });
 
-    res.status(202).json({ message: "User succefully login" });
+    res.status(202).json({ message: "User successfully logged in" });
   } catch (e) {
     console.log(`error: ${e.message}`);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 });
 

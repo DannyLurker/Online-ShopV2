@@ -1,14 +1,31 @@
-import React, { useState, Suspense } from "react";
-import { Outlet } from "react-router-dom";
+import React, { useState, Suspense, useEffect } from "react";
+import { Outlet, Link } from "react-router-dom";
 import Spinner from "./Spinner";
-import { Link } from "react-router-dom";
+import axios from "axios";
 
 const NavWrapper = () => {
   const [isCheck, setIsCheck] = useState(false);
+  const [userData, setUserData] = useState({});
 
   function check() {
     setIsCheck((prev) => !prev);
   }
+
+  const getData = async () => {
+    try {
+      const response = await axios.get(`http://localhost:3000/`, {
+        withCredentials: true,
+      });
+      setUserData(response.data);
+    } catch (e) {
+      console.log(`Error: ${e.message}`);
+    }
+  };
+
+  useEffect(() => {
+    getData();
+    return () => setUserData({});
+  }, []);
 
   return (
     <div className="bg-gradient-to-t from-[#a2d2ff] to-[#bde0fe] min-h-screen h-full pt-16">
@@ -19,13 +36,7 @@ const NavWrapper = () => {
               <h1 className="relative font-bold font-mono text-3xl">OSV2</h1>
             </Link>
           </div>
-          <div
-            className={
-              isCheck
-                ? "left-[0%] top-[100%] navbar z-10 transition-all duration-500"
-                : "left-[-100%] top-[100%] navbar transition-all duration-500"
-            }
-          >
+          <div className={isCheck ? "navbar z-10" : "hidden"}>
             <ul className="flex flex-col md:flex-row md:items-center gap-8 md:gap-[4vw]">
               <li>
                 <a className="underline-link" href="#">
@@ -48,7 +59,7 @@ const NavWrapper = () => {
                 </a>
                 <button className="block md:hidden mt-8 button">
                   <h2>
-                    <a href="/signup">Sign In</a>
+                    <Link to="/signup">Sign In</Link>
                   </h2>
                 </button>
               </li>
@@ -57,7 +68,7 @@ const NavWrapper = () => {
           <div className="hidden md:flex">
             <button className="block button mr-2">
               <h2>
-                <a href="/signup">Sign In</a>
+                <Link to="/signup">Sign In</Link>
               </h2>
             </button>
             <div>
@@ -66,7 +77,7 @@ const NavWrapper = () => {
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
-                  strokeWidth="{1.5}"
+                  strokeWidth="1.5"
                   stroke="currentColor"
                   className="w-12"
                 >
@@ -87,10 +98,8 @@ const NavWrapper = () => {
                   htmlFor=""
                   className="h-fit w-64 scale-90 overflow-y-auto overscroll-contain rounded-lg bg-[#ffc8dd] p-6 text-black shadow-2xl transition"
                 >
-                  <h3 className="text-lg font-bold">osas</h3>
-                  <p className="py-4">
-                    Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                  </p>
+                  <h3 className="text-lg font-bold">{userData.name}</h3>
+                  <p className="py-4">{userData.email}</p>{" "}
                 </label>
               </label>
             </div>
@@ -103,7 +112,7 @@ const NavWrapper = () => {
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
-                  strokeWidth="{1.5}"
+                  strokeWidth="1.5"
                   stroke="currentColor"
                   className="w-12"
                 >
@@ -124,18 +133,14 @@ const NavWrapper = () => {
                   htmlFor="user-modal1"
                   className="h-fit w-64 scale-90 overflow-y-auto overscroll-contain rounded-lg bg-[#ffc8dd] p-6 text-black shadow-2xl transition "
                 >
-                  <h3 className="text-lg font-bold">osas</h3>
-                  <p className="py-4 ">
-                    Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                  </p>
+                  <h3 className="text-lg font-bold">{userData.name}</h3>
+                  <p className="py-4 ">{userData.email}</p>
                 </label>
               </label>
             </div>
             <div
               className={
-                isCheck
-                  ? "active hamburger ml-3 mt-2 cursor-pointer lg:hidden"
-                  : "hamburger ml-3 mt-2 cursor-pointer lg:hidden"
+                isCheck ? "active hamburger ml-3 mt-2" : "hamburger ml-3 mt-2"
               }
               onClick={check}
             >
