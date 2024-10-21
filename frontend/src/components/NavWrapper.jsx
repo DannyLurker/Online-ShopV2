@@ -1,14 +1,34 @@
 import React, { useState, Suspense, useEffect } from "react";
-import { Outlet, Link } from "react-router-dom";
+import { Outlet, Link, useNavigate } from "react-router-dom";
 import Spinner from "./Spinner";
 import axios from "axios";
+import { LuDoorOpen } from "react-icons/lu";
 
 const NavWrapper = () => {
   const [isCheck, setIsCheck] = useState(false);
   const [userData, setUserData] = useState({});
+  const navigate = useNavigate();
 
   function check() {
     setIsCheck((prev) => !prev);
+  }
+
+  let formatterDate = "Date...";
+  if (userData.createdAt) {
+    const date = new Date(userData.createdAt);
+
+    if (!isNaN(date.getTime())) {
+      const formatter = new Intl.DateTimeFormat("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        timeZone: "Asia/Jakarta",
+      });
+      formatterDate = formatter.format(date);
+    }
   }
 
   const getData = async () => {
@@ -19,6 +39,17 @@ const NavWrapper = () => {
       setUserData(response.data);
     } catch (e) {
       console.log(`Error: ${e.message}`);
+    }
+  };
+
+  const logOut = async () => {
+    try {
+      await axios.delete(`http://localhost:3000/logout`, {
+        withCredentials: true,
+      });
+      navigate(`/login`);
+    } catch (e) {
+      console.log(`error : ${e}`);
     }
   };
 
@@ -36,7 +67,13 @@ const NavWrapper = () => {
               <h1 className="relative font-bold font-mono text-3xl">OSV2</h1>
             </Link>
           </div>
-          <div className={isCheck ? "navbar z-10" : "hidden"}>
+          <div
+            className={
+              isCheck
+                ? "left-[0%] top-[100%] navbar z-10 transition-all duration-500"
+                : "left-[-100%] top-[100%] navbar transition-all duration-500"
+            }
+          >
             <ul className="flex flex-col md:flex-row md:items-center gap-8 md:gap-[4vw]">
               <li>
                 <a className="underline-link" href="#">
@@ -98,8 +135,14 @@ const NavWrapper = () => {
                   htmlFor=""
                   className="h-fit w-64 scale-90 overflow-y-auto overscroll-contain rounded-lg bg-[#ffc8dd] p-6 text-black shadow-2xl transition"
                 >
-                  <h3 className="text-lg font-bold">{userData.name}</h3>
-                  <p className="py-4">{userData.email}</p>{" "}
+                  <h3 className="text-lg font-bold">
+                    {userData.name ? userData.name : "user"}
+                  </h3>
+                  <p className="py-4">{`Created when: ${formatterDate}`}</p>
+                  <LuDoorOpen
+                    onClick={logOut}
+                    className="w-8 h-8 cursor-pointer"
+                  />
                 </label>
               </label>
             </div>
@@ -133,8 +176,14 @@ const NavWrapper = () => {
                   htmlFor="user-modal1"
                   className="h-fit w-64 scale-90 overflow-y-auto overscroll-contain rounded-lg bg-[#ffc8dd] p-6 text-black shadow-2xl transition "
                 >
-                  <h3 className="text-lg font-bold">{userData.name}</h3>
-                  <p className="py-4 ">{userData.email}</p>
+                  <h3 className="text-lg font-bold">
+                    {userData.name ? userData.name : "user"}
+                  </h3>
+                  <p className="py-4">{`Created when: ${formatterDate}`}</p>
+                  <LuDoorOpen
+                    onClick={logOut}
+                    className="w-8 h-8 cursor-pointer"
+                  />
                 </label>
               </label>
             </div>

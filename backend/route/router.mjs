@@ -60,7 +60,7 @@ Router.get(`/`, authenticate, async (req, res) => {
 
     res.json({
       name: findUser.name,
-      email: findUser.email,
+      createdAt: findUser.createdAt,
     });
   } catch (e) {
     console.log(`error: ${e.message}`);
