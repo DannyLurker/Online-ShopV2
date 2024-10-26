@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { FaArrowLeft } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
+import ErrorMessage from "./ErrorMessage";
 import axios from "axios";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState([]);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -21,17 +23,26 @@ const Login = () => {
       navigate("/");
     } catch (e) {
       navigate("/login");
-      console.error("Error:", e.response?.data || e.message);
+      console.error("Error :", e.response?.data || e.message);
+      const errorData = e.response?.data;
+
+      setError(
+        Array.isArray(errorData?.error)
+          ? errorData.error.map((err) => err.msg)
+          : [errorData?.message || "An error occurred"]
+      );
     }
   };
 
   return (
-    <div className="bg-gradient-to-t from-[#a2d2ff] to-[#bde0fe] min-h-screen flex justify-center items-center">
+    <div className="bg-gradient-to-t from-[#a2d2ff] to-[#bde0fe] min-h-screen flex flex-col justify-center items-center">
+      <ErrorMessage error={error} />
+
       <div className="bg-[#cdb4db] w-[250px] h-[300px] rounded-md shadow-md opacity-75 p-2">
         <div className="flex justify-center mt-2 flex-col text-center px-2 mb-3">
           <h1 className="text-3xl font-bold ">Login</h1>
           <p>
-            Don't Have an Account yet?{" "}
+            Don't Have an Account yet?
             <a href="/signup" className="text-blue-500">
               Sign Up
             </a>

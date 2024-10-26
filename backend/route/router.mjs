@@ -94,7 +94,7 @@ Router.post(
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      return res.status(400).json({ error: errors.array() });
     }
 
     try {
@@ -135,7 +135,9 @@ Router.post(`/login`, async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    const isPasswordValid = bcrypt.compare(password, user.password);
+    // AWAIT IS NECESSARY
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+
     if (!isPasswordValid) {
       return res.status(403).json({ message: "Password or email is wrong" });
     }

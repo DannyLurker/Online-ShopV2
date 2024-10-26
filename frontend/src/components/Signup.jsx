@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import ErrorMessage from "./ErrorMessage";
 
 const Signup = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState([]);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -18,12 +20,21 @@ const Signup = () => {
       });
       navigate(`/login`);
     } catch (e) {
-      console.error("Error:", e.response?.data || e.message);
+      console.error("Error :", e.response?.data || e.message);
+      const errorData = e.response?.data;
+
+      setError(
+        Array.isArray(errorData?.error)
+          ? errorData.error.map((err) => err.msg)
+          : [errorData?.message || "An error occurred"]
+      );
     }
   };
 
   return (
-    <div className="bg-gradient-to-t from-[#a2d2ff] to-[#bde0fe] min-h-screen flex justify-center items-center">
+    <div className="bg-gradient-to-t from-[#a2d2ff] to-[#bde0fe] min-h-screen flex flex-col justify-center items-center">
+      <ErrorMessage error={error} />
+
       <div className="bg-[#cdb4db] w-[250px] h-[320px] rounded-md shadow-md opacity-75 p-2">
         <div className="flex justify-center mt-2 flex-col text-center px-2 mb-3">
           <h1 className="text-3xl font-bold ">Sign Up</h1>
@@ -38,7 +49,7 @@ const Signup = () => {
           <form onSubmit={handleSubmit}>
             <input
               type="text"
-              className="bg-[#cdb4db] placeholder-gray-500 outline-none border-b-2 border-gray-500 mb-5 invalid:focus:border-red-600 "
+              className="bg-[#cdb4db] placeholder-gray-500 outline-none border-b-2 border-gray-500 mb-5 invalid:focus:border-red-600"
               placeholder="Name..."
               required
               minLength={3}
@@ -47,16 +58,15 @@ const Signup = () => {
             />
             <input
               type="email"
-              className="bg-[#cdb4db] placeholder-gray-500 outline-none border-b-2 border-gray-500 mb-5 invalid:focus:border-red-600 "
+              className="bg-[#cdb4db] placeholder-gray-500 outline-none border-b-2 border-gray-500 mb-5 invalid:focus:border-red-600"
               placeholder="Email..."
               required
-              minLength={3}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
             <input
               type="password"
-              className="bg-[#cdb4db] placeholder-gray-500 outline-none border-b-2 border-gray-500 mb-5 invalid:focus:border-red-600 "
+              className="bg-[#cdb4db] placeholder-gray-500 outline-none border-b-2 border-gray-500 mb-5 invalid:focus:border-red-600"
               placeholder="Password..."
               required
               minLength={8}
@@ -64,10 +74,10 @@ const Signup = () => {
               onChange={(e) => setPassword(e.target.value)}
             />
             <button
-              type="sumbit"
+              type="submit"
               className="w-[63%] h-10 bg-[#b68ccf] rounded-md text-white font-semibold mt-2"
             >
-              Sumbit
+              Submit
             </button>
           </form>
         </div>
