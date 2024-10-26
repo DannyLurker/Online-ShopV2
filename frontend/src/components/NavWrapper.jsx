@@ -9,7 +9,8 @@ const NavWrapper = () => {
   const [userData, setUserData] = useState({});
   const navigate = useNavigate();
 
-  function check() {
+  function check(e) {
+    e.preventDefault();
     setIsCheck((prev) => !prev);
   }
 
@@ -38,24 +39,43 @@ const NavWrapper = () => {
       });
       setUserData(response.data);
     } catch (e) {
-      console.log(`Error: ${e.message}`);
+      console.error("Error:", e.response?.data || e.message);
     }
   };
 
-  const logOut = async () => {
+  const logOut = async (e) => {
     try {
+      e.preventDefault();
       await axios.delete(`http://localhost:3000/logout`, {
         withCredentials: true,
       });
       navigate(`/login`);
     } catch (e) {
-      console.log(`error : ${e}`);
+      console.error("Error:", e.response?.data || e.message);
+    }
+  };
+
+  const refreshToken = async (e) => {
+    try {
+      await axios.post(
+        `http://localhost:3000/refresh-token`,
+        {},
+        {
+          withCredentials: true,
+        }
+      );
+    } catch (e) {
+      console.error("Error refreshing token:", e.response?.data || e.message);
     }
   };
 
   useEffect(() => {
     getData();
-    return () => setUserData({});
+    const intervalId = setInterval(refreshToken, 13 * 60 * 1000);
+    return () => {
+      setUserData({});
+      clearInterval(intervalId);
+    };
   }, []);
 
   return (
@@ -94,20 +114,28 @@ const NavWrapper = () => {
                 <a className="underline-link" href="#">
                   History
                 </a>
-                <button className="block md:hidden mt-8 button">
-                  <h2>
-                    <Link to="/signup">Sign In</Link>
-                  </h2>
-                </button>
+                {userData.createdAt ? (
+                  ""
+                ) : (
+                  <button className="block md:hidden mt-8 button">
+                    <h2>
+                      <Link to="/signup">Sign In</Link>
+                    </h2>
+                  </button>
+                )}
               </li>
             </ul>
           </div>
           <div className="hidden md:flex">
-            <button className="block button mr-2">
-              <h2>
-                <Link to="/signup">Sign In</Link>
-              </h2>
-            </button>
+            {userData.createdAt ? (
+              ""
+            ) : (
+              <button className="block button mr-2">
+                <h2>
+                  <Link to="/signup">Sign In</Link>
+                </h2>
+              </button>
+            )}
             <div>
               <label htmlFor="user-modal" className="cursor-pointer">
                 <svg
@@ -139,10 +167,14 @@ const NavWrapper = () => {
                     {userData.name ? userData.name : "user"}
                   </h3>
                   <p className="py-4">{`Created when: ${formatterDate}`}</p>
-                  <LuDoorOpen
-                    onClick={logOut}
-                    className="w-8 h-8 cursor-pointer"
-                  />
+                  {userData.createdAt ? (
+                    <LuDoorOpen
+                      onClick={logOut}
+                      className="w-8 h-8 cursor-pointer"
+                    />
+                  ) : (
+                    ""
+                  )}
                 </label>
               </label>
             </div>
@@ -180,10 +212,14 @@ const NavWrapper = () => {
                     {userData.name ? userData.name : "user"}
                   </h3>
                   <p className="py-4">{`Created when: ${formatterDate}`}</p>
-                  <LuDoorOpen
-                    onClick={logOut}
-                    className="w-8 h-8 cursor-pointer"
-                  />
+                  {userData.name ? (
+                    <LuDoorOpen
+                      onClick={logOut}
+                      className="w-8 h-8 cursor-pointer"
+                    />
+                  ) : (
+                    ""
+                  )}
                 </label>
               </label>
             </div>

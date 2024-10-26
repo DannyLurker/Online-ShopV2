@@ -18,7 +18,7 @@ const Signup = () => {
       });
       navigate(`/login`);
     } catch (e) {
-      console.log(e);
+      console.error("Error:", e.response?.data || e.message);
     }
   };
 

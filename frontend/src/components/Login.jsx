@@ -20,6 +20,7 @@ const Login = () => {
 
       navigate("/");
     } catch (e) {
+      navigate("/login");
       console.error("Error:", e.response?.data || e.message);
     }
   };

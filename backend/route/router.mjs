@@ -26,7 +26,11 @@ dotenv.config();
 
 // GENERATE TOKEN JWT
 const generateAccessToken = (user) => {
-  return jwt.sign(user, process.env.SECRET_ACCESS_TOKEN);
+  return jwt.sign(user, process.env.SECRET_ACCESS_TOKEN, { expiresIn: "15m" });
+};
+
+const generateRefreshToken = (user) => {
+  return jwt.sign(user, process.env.SECRET_REFRESH_TOKEN, { expiresIn: "1d" });
 };
 
 //MIDDLEWARE AUTH JWT
@@ -114,7 +118,7 @@ Router.post(
       newUser.save();
       return res
         .status(201)
-        .json({ message: "Data successfully created and stored" });
+        .json({ message: "New user data successfully created and stored" });
     } catch (e) {
       console.log(`error: ${e.message}`);
     }
@@ -131,18 +135,25 @@ Router.post(`/login`, async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    const isPasswordValid = bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
       return res.status(403).json({ message: "Password or email is wrong" });
     }
 
     const accessToken = generateAccessToken({ email: user.email });
+    const refreshToken = generateRefreshToken({ email: user.email });
 
     res.cookie("jwt", accessToken, {
       httpOnly: true,
       secure: true,
       sameSite: "strict",
-      maxAge: 24 * 60 * 60 * 1000,
+      maxAge: 15 * 60 * 1000,
+    });
+    res.cookie("jwtRefresh", refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "strict",
+      maxAge: 3 * 24 * 60 * 60 * 1000,
     });
 
     res.status(202).json({ message: "User successfully logged in" });
@@ -152,10 +163,49 @@ Router.post(`/login`, async (req, res) => {
   }
 });
 
+// Route untuk refresh token
+Router.post(`/refresh-token`, (req, res) => {
+  const refreshToken = req.cookies.jwtRefresh;
+  console.log(refreshToken);
+
+  if (!refreshToken) {
+    return res.status(401).json({ message: "Refresh token is unavailable" });
+  }
+
+  jwt.verify(refreshToken, process.env.SECRET_REFRESH_TOKEN, (err, user) => {
+    if (err) {
+      return res.status(403).json({ message: "Refresh token is invalid" });
+    }
+
+    const accessToken = generateAccessToken({ email: user.email });
+
+    res.cookie("jwt", accessToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "strict",
+      maxAge: 15 * 60 * 1000,
+    });
+
+    res.json({ message: "Access token refreshed" });
+  });
+});
+
 //LOGOUT
 Router.delete(`/logout`, (req, res) => {
-  res.clearCookie(`jwt`);
-  res.status(200).json({ message: `User successfull logged out` });
+  res.clearCookie("jwt", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "Strict",
+  });
+
+  res.clearCookie("jwtRefresh", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "Strict",
+  });
+  res
+    .status(202)
+    .json({ message: `User successful Llgged out and tokens deleted` });
 });
 
 export default Router;
