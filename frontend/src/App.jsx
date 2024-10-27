@@ -22,16 +22,11 @@ function App() {
       setUserId(response.data.userId);
     } catch (e) {
       console.log(`Error: `, e.response?.data || e.message);
-    }
-  };
-
-  const checkAuth = (userId) => {
-    if (userId !== null) {
-      setAuth(true);
-    } else {
       setAuth(false);
     }
   };
+
+  const checkAuth = (userId) => setAuth(userId !== null ? true : false);
 
   console.log(auth);
 
