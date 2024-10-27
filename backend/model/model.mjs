@@ -5,8 +5,8 @@ dotenv.config();
 const userLoginConnection = createConnection(
   process.env.USER_LOGIN_DB_CONNECTION
 );
-const userSellProductConnection = createConnection(
-  process.env.USER_SELLPRODUCTS_DB_CONNECTION
+const userProductConnection = createConnection(
+  process.env.USER_PRODUCT_DB_CONNECTION
 );
 const userCartsConnection = createConnection(
   process.env.USER_CARTS_DB_CONNECTION
@@ -36,4 +36,21 @@ const userLoginSchema = new Schema(
 export const userLoginModel = userLoginConnection.model(
   "user-login-OSV2",
   userLoginSchema
+);
+
+const userProductSchema = new Schema({
+  name: {
+    require: true,
+    type: String,
+  },
+  price: {
+    require: true,
+    type: Number,
+    min: 1,
+  },
+});
+
+export const userProductModel = userProductConnection.model(
+  "user-products-OSV2",
+  userProductSchema
 );

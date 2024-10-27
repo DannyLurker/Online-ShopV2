@@ -7,7 +7,7 @@ import { LuDoorOpen } from "react-icons/lu";
 const NavWrapper = () => {
   const [isCheck, setIsCheck] = useState(false);
   const [userData, setUserData] = useState({});
-  const [error, setError] = useState([]);
+
   const navigate = useNavigate();
 
   function check(e) {
@@ -41,7 +41,6 @@ const NavWrapper = () => {
       setUserData(response.data);
     } catch (e) {
       console.error("Error:", e.response?.data || e.message);
-      setError(e.response?.data || e.message);
     }
   };
 
@@ -54,7 +53,6 @@ const NavWrapper = () => {
       navigate(`/login`);
     } catch (e) {
       console.error("Error:", e.response?.data || e.message);
-      setError(e.response?.data || e.message);
     }
   };
 
@@ -69,7 +67,6 @@ const NavWrapper = () => {
       );
     } catch (e) {
       console.error("Error :", e.response?.data || e.message);
-      setError(e.response?.data || e.message);
     }
   };
 
@@ -110,8 +107,8 @@ const NavWrapper = () => {
                 </a>
               </li>
               <li>
-                <a className="underline-link" href="#">
-                  Sells
+                <a className="underline-link" href="product">
+                  Product (Your Product)
                 </a>
               </li>
               <li>

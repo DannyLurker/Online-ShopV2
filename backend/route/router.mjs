@@ -165,7 +165,25 @@ Router.post(`/login`, async (req, res) => {
   }
 });
 
-// Route untuk refresh token
+// LOGIN ROUTE FOR GET DATA (JWT)
+Router.get("/login", authenticate, async (req, res) => {
+  try {
+    const userEmail = req.user.email;
+
+    const findUser = await userLoginModel.findOne({ email: userEmail });
+
+    if (!findUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json({ userId: findUser._id });
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// REFRESH-TOKEN ROUTE
 Router.post(`/refresh-token`, (req, res) => {
   const refreshToken = req.cookies.jwtRefresh;
   console.log(refreshToken);
