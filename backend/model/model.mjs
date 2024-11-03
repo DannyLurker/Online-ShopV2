@@ -39,7 +39,15 @@ export const userLoginModel = userLoginConnection.model(
 );
 
 const userProductSchema = new Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+  },
   name: {
+    require: true,
+    type: String,
+  },
+  description: {
     require: true,
     type: String,
   },

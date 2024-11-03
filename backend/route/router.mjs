@@ -5,7 +5,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import bcrypt from "bcrypt";
 import { body, validationResult } from "express-validator";
-import { userLoginModel } from "../model/model.mjs";
+import { userLoginModel, userProductModel } from "../model/model.mjs";
 
 // INITIALIZE EXPRESS
 const Router = express.Router();
@@ -26,11 +26,15 @@ dotenv.config();
 
 // GENERATE TOKEN JWT
 const generateAccessToken = (user) => {
-  return jwt.sign(user, process.env.SECRET_ACCESS_TOKEN, { expiresIn: "15m" });
+  return jwt.sign({ _id: user._id }, process.env.SECRET_ACCESS_TOKEN, {
+    expiresIn: "15m",
+  });
 };
 
 const generateRefreshToken = (user) => {
-  return jwt.sign(user, process.env.SECRET_REFRESH_TOKEN, { expiresIn: "1d" });
+  return jwt.sign({ _id: user._id }, process.env.SECRET_REFRESH_TOKEN, {
+    expiresIn: "1d",
+  });
 };
 
 //MIDDLEWARE AUTH JWT
@@ -46,7 +50,6 @@ const authenticate = (req, res, next) => {
     }
 
     req.user = user;
-
     next();
   });
 };
@@ -54,29 +57,31 @@ const authenticate = (req, res, next) => {
 // HOME ROUTE FOR GET DATA
 Router.get(`/`, authenticate, async (req, res) => {
   try {
-    const userEmail = req.user.email;
+    const userId = req.user._id;
 
-    const findUser = await userLoginModel.findOne({ email: userEmail });
+    const findUser = await userLoginModel.findOne({ _id: userId });
 
     if (!findUser) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    res.json({
+    return res.json({
       name: findUser.name,
       createdAt: findUser.createdAt,
     });
   } catch (e) {
     console.log(`error: ${e.message}`);
+    res.status(500).json({ message: "Server error" });
   }
 });
 
 // SIGNUP ROUTE FOR SEND DATA
 Router.post(
   `/signup`,
+  //Email validation
   body("email").isEmail().withMessage("Email isn't valid.").normalizeEmail(),
 
-  // Validasi password
+  // Password validation
   body("password")
     .isLength({ min: 8 })
     .withMessage("The password must contain at least 8 characters.")
@@ -85,7 +90,7 @@ Router.post(
     .matches(/[!@#$%^&*(),.?":{}|<>]/)
     .withMessage("Password must contain symbol at least 1."),
 
-  // Validasi username
+  // Username validation
   body("name")
     .notEmpty()
     .withMessage("Username cant be empty.")
@@ -142,8 +147,8 @@ Router.post(`/login`, async (req, res) => {
       return res.status(403).json({ message: "Password or email is wrong" });
     }
 
-    const accessToken = generateAccessToken({ email: user.email });
-    const refreshToken = generateRefreshToken({ email: user.email });
+    const accessToken = generateAccessToken({ _id: user._id });
+    const refreshToken = generateRefreshToken({ _id: user._id });
 
     res.cookie("jwt", accessToken, {
       httpOnly: true,
@@ -158,7 +163,7 @@ Router.post(`/login`, async (req, res) => {
       maxAge: 3 * 24 * 60 * 60 * 1000,
     });
 
-    res.status(202).json({ message: "User successfully logged in" });
+    return res.status(202).json({ message: "User successfully logged in" });
   } catch (e) {
     console.log(`error: ${e.message}`);
     res.status(500).json({ message: "Internal Server Error" });
@@ -168,15 +173,15 @@ Router.post(`/login`, async (req, res) => {
 // LOGIN ROUTE FOR GET DATA (JWT)
 Router.get("/login", authenticate, async (req, res) => {
   try {
-    const userEmail = req.user.email;
+    const userId = req.user._id;
 
-    const findUser = await userLoginModel.findOne({ email: userEmail });
+    const findUser = await userLoginModel.findOne({ _id: userId });
 
     if (!findUser) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    res.json({ userId: findUser._id });
+    return res.json({ userId: findUser._id });
   } catch (error) {
     console.error("Error fetching user:", error);
     res.status(500).json({ message: "Server error" });
@@ -186,7 +191,6 @@ Router.get("/login", authenticate, async (req, res) => {
 // REFRESH-TOKEN ROUTE
 Router.post(`/refresh-token`, (req, res) => {
   const refreshToken = req.cookies.jwtRefresh;
-  console.log(refreshToken);
 
   if (!refreshToken) {
     return res.status(401).json({ message: "Refresh token is unavailable" });
@@ -206,9 +210,70 @@ Router.post(`/refresh-token`, (req, res) => {
       maxAge: 15 * 60 * 1000,
     });
 
-    res.json({ message: "Access token refreshed" });
+    return res.json({ message: "Access token refreshed" });
   });
 });
+
+//PRODUCT ROUTE FOR GET DATA
+Router.get(`/product`, async (req, res) => {
+  try {
+    const product = await userProductModel.find();
+
+    if (product.length === 0) {
+      return res.status(404).json({ message: "Data not found" });
+    }
+
+    return res.status(200).json({ message: "Succesful get the product data" });
+  } catch (e) {
+    console.log(`Error: ${e.message}`);
+  }
+});
+
+//ADD PRODUCT ROUTE FOR POST DATA
+Router.post(
+  `/product/add`,
+  authenticate,
+  body("name")
+    .notEmpty()
+    .withMessage("Username cant be empty.")
+    .isLength({ min: 3 })
+    .withMessage("The username must contain at least 3 characters"),
+
+  body("description")
+    .notEmpty()
+    .withMessage("Description cant be empty")
+    .isLength({ min: "3" })
+    .withMessage("The Description must contain at least 3 characters"),
+  body("price")
+    .notEmpty()
+    .withMessage("Price cant be empty")
+    .isNumeric()
+    .withMessage("Price must be a number"),
+
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const userId = req.user._id;
+    const { name, description, price } = req.body;
+
+    console.log({ name, description, price, userId });
+    try {
+      const newProduct = new userProductModel({
+        userId: userId,
+        name: name,
+        description: description,
+        price: price,
+      });
+
+      newProduct.save();
+    } catch (e) {
+      console.log(`Error: ${e.message}`);
+    }
+  }
+);
 
 //LOGOUT
 Router.delete(`/logout`, (req, res) => {
@@ -225,7 +290,7 @@ Router.delete(`/logout`, (req, res) => {
   });
   res
     .status(202)
-    .json({ message: `User successful Llgged out and tokens deleted` });
+    .json({ message: `User successful Logged out and tokens deleted` });
 });
 
 export default Router;

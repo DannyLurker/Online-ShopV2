@@ -49,7 +49,7 @@ const Signup = () => {
           <form onSubmit={handleSubmit}>
             <input
               type="text"
-              className="bg-[#cdb4db] placeholder-gray-500 outline-none border-b-2 border-gray-500 mb-5 invalid:focus:border-red-600"
+              className="input"
               placeholder="Name..."
               required
               minLength={3}
@@ -58,7 +58,7 @@ const Signup = () => {
             />
             <input
               type="email"
-              className="bg-[#cdb4db] placeholder-gray-500 outline-none border-b-2 border-gray-500 mb-5 invalid:focus:border-red-600"
+              className="input"
               placeholder="Email..."
               required
               value={email}
@@ -66,17 +66,14 @@ const Signup = () => {
             />
             <input
               type="password"
-              className="bg-[#cdb4db] placeholder-gray-500 outline-none border-b-2 border-gray-500 mb-5 invalid:focus:border-red-600"
+              className="input"
               placeholder="Password..."
               required
               minLength={8}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
-            <button
-              type="submit"
-              className="w-[63%] h-10 bg-[#b68ccf] rounded-md text-white font-semibold mt-2"
-            >
+            <button type="submit" className="button-submit">
               Submit
             </button>
           </form>

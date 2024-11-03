@@ -9,6 +9,7 @@ const HomePage = lazy(() => import("./components/HomePage"));
 const Login = lazy(() => import("./components/Login"));
 const Signup = lazy(() => import("./components/Signup"));
 const Product = lazy(() => import("./components/Product"));
+const AddProduct = lazy(() => import("./components/AddProduct"));
 
 function App() {
   const [userId, setUserId] = useState(null);
@@ -28,8 +29,6 @@ function App() {
 
   const checkAuth = (userId) => setAuth(userId !== null ? true : false);
 
-  console.log(auth);
-
   useEffect(() => {
     getUser();
   }, []);
@@ -47,6 +46,7 @@ function App() {
               <Route path="/" element={<HomePage />} />
               <Route element={<PrivateWrapper auth={auth} />}>
                 <Route path="/product" element={<Product />} />
+                <Route path="/product/add" element={<AddProduct />} />
               </Route>
             </Route>
             <Route path="/login" element={<Login />} />

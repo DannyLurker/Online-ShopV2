@@ -33,7 +33,7 @@ const NavWrapper = () => {
     }
   }
 
-  const getData = async () => {
+  const getData = async (e) => {  
     try {
       const response = await axios.get(`http://localhost:3000/`, {
         withCredentials: true,
@@ -72,7 +72,9 @@ const NavWrapper = () => {
 
   useEffect(() => {
     getData();
-    const intervalId = setInterval(refreshToken, 13 * 60 * 1000);
+    const intervalId = setTimeout(() => {
+      setInterval(refreshToken, 13 * 60 * 1000);
+    }, 13 * 60 * 1000);
     return () => {
       setUserData({});
       clearInterval(intervalId);
@@ -97,24 +99,24 @@ const NavWrapper = () => {
           >
             <ul className="flex flex-col md:flex-row md:items-center gap-8 md:gap-[4vw]">
               <li>
-                <a className="underline-link" href="#">
+                <Link className="underline-link" to="#">
                   Marketplace
-                </a>
+                </Link>
               </li>
               <li>
-                <a className="underline-link" href="#">
+                <Link className="underline-link" to="#">
                   Cart
-                </a>
+                </Link>
               </li>
               <li>
-                <a className="underline-link" href="product">
+                <Link className="underline-link" to="product">
                   Product (Your Product)
-                </a>
+                </Link>
               </li>
               <li>
-                <a className="underline-link" href="#">
+                <Link className="underline-link" to="#">
                   History
-                </a>
+                </Link>
                 {userData.createdAt ? (
                   ""
                 ) : (
