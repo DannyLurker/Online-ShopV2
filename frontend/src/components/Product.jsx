@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import Card from "./Card.jsx";
 
 const Product = () => {
   const [productData, setProductData] = useState([]);
@@ -8,14 +9,17 @@ const Product = () => {
 
   const getData = async () => {
     try {
-      const response = await axios.get(`http://localhost:3000/product`);
-      setProductData(response.data);
-      console.log(response);
+      const response = await axios.get(`http://localhost:3000/product`, {
+        withCredentials: true,
+      });
+      setProductData(response?.data?.product);
     } catch (e) {
       console.log("Error:", e.response?.data || e.message);
       setError(e.response?.data?.message || e.message);
     }
   };
+
+  console.log(productData);
 
   useEffect(() => {
     getData();
@@ -37,11 +41,12 @@ const Product = () => {
       )}
 
       {productData.length > 0 && (
-        <div>
-          <h1 className="text-3xl font-bold">Product List</h1>
+        <div className="grid place-content-around grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 p-2 gap-2 ">
           <ul>
-            {productData.map((product) => (
-              <li key={product._id}>{product.name}</li>
+            {productData.map((product, index) => (
+              <li key={index}>
+                <Card name={product.name} price={product.price} />
+              </li>
             ))}
           </ul>
         </div>

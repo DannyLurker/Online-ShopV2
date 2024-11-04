@@ -1,7 +1,6 @@
 import { React, lazy } from "react";
-
 const Carousel = lazy(() => import("./Carousel"));
-const Card = lazy(() => import("./Card"));
+const CardHomePage = lazy(() => import("./CardHomePage"));
 
 const HomePage = () => {
   let slides = [
@@ -17,7 +16,7 @@ const HomePage = () => {
         <Carousel slides={slides} autoSlide={true} />
       </div>
       <div>
-        <Card />
+        <CardHomePage />
       </div>
     </div>
   );

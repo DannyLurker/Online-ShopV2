@@ -215,17 +215,31 @@ Router.post(`/refresh-token`, (req, res) => {
 });
 
 //PRODUCT ROUTE FOR GET DATA
-Router.get(`/product`, async (req, res) => {
+Router.get(`/product`, authenticate, async (req, res) => {
   try {
-    const product = await userProductModel.find();
+    const userId = req.user._id;
+    const products = await userProductModel.find({ userId });
 
-    if (product.length === 0) {
+    if (products.length === 0) {
       return res.status(404).json({ message: "Data not found" });
     }
 
-    return res.status(200).json({ message: "Succesful get the product data" });
+    // Format harga setiap produk secara terpisah
+    const formattedProducts = products.map((product) => ({
+      ...product._doc,
+      price: new Intl.NumberFormat(`id-ID`, {
+        style: `currency`,
+        currency: `IDR`,
+      }).format(product.price),
+    }));
+
+    return res.status(200).json({
+      product: formattedProducts,
+      message: "Succesful get the product data",
+    });
   } catch (e) {
     console.log(`Error: ${e.message}`);
+    return res.status(500).json({ message: "Server error" });
   }
 });
 
