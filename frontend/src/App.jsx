@@ -12,30 +12,25 @@ const Product = lazy(() => import("./components/Product"));
 const AddProduct = lazy(() => import("./components/AddProduct"));
 
 function App() {
-  const [userId, setUserId] = useState(null);
   const [auth, setAuth] = useState(false);
 
-  const getUser = async () => {
-    try {
-      const response = await axios.get(`http://localhost:3000/login`, {
-        withCredentials: true,
-      });
-      setUserId(response.data.userId);
-    } catch (e) {
-      console.log(`Error: `, e.response?.data || e.message);
-      setAuth(false);
-    }
-  };
-
-  const checkAuth = (userId) => setAuth(userId !== null ? true : false);
-
   useEffect(() => {
+    const getUser = async () => {
+      try {
+        const response = await axios.get(`http://localhost:3000/login`, {
+          withCredentials: true,
+        });
+
+        if (response.status === 200) {
+          setAuth(true);
+        }
+      } catch (e) {
+        console.log(`Error: `, e.response?.data || e.message);
+        setAuth(false);
+      }
+    };
     getUser();
   }, []);
-
-  useEffect(() => {
-    checkAuth(userId);
-  }, [userId]);
 
   return (
     <>

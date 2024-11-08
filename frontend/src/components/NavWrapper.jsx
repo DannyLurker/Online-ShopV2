@@ -15,25 +15,7 @@ const NavWrapper = () => {
     setIsCheck((prev) => !prev);
   }
 
-  let formatterDate = "Date...";
-  if (userData.createdAt) {
-    const date = new Date(userData.createdAt);
-
-    if (!isNaN(date.getTime())) {
-      const formatter = new Intl.DateTimeFormat("en-US", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-        timeZone: "Asia/Jakarta",
-      });
-      formatterDate = formatter.format(date);
-    }
-  }
-
-  const getData = async (e) => {  
+  const getData = async () => {
     try {
       const response = await axios.get(`http://localhost:3000/`, {
         withCredentials: true,
@@ -56,7 +38,7 @@ const NavWrapper = () => {
     }
   };
 
-  const refreshToken = async (e) => {
+  const refreshToken = async () => {
     try {
       await axios.post(
         `http://localhost:3000/refresh-token`,
@@ -99,24 +81,24 @@ const NavWrapper = () => {
           >
             <ul className="flex flex-col md:flex-row md:items-center gap-8 md:gap-[4vw]">
               <li>
-                <Link className="underline-link" to="#">
+                <a className="underline-link" href="#">
                   Marketplace
-                </Link>
+                </a>
               </li>
               <li>
-                <Link className="underline-link" to="#">
+                <a className="underline-link" href="#">
                   Cart
-                </Link>
+                </a>
               </li>
               <li>
-                <Link className="underline-link" to="product">
+                <a className="underline-link" href="/product">
                   Product (Your Product)
-                </Link>
+                </a>
               </li>
               <li>
-                <Link className="underline-link" to="#">
+                <a className="underline-link" href="#">
                   History
-                </Link>
+                </a>
                 {userData.createdAt ? (
                   ""
                 ) : (
@@ -169,7 +151,9 @@ const NavWrapper = () => {
                   <h3 className="text-lg font-bold">
                     {userData.name ? userData.name : "user"}
                   </h3>
-                  <p className="py-4">{`Created when: ${formatterDate}`}</p>
+                  <p className="py-4">{`Created when: ${
+                    userData.createdAt ? userData.createdAt : `Date...`
+                  }`}</p>
                   {userData.createdAt ? (
                     <LuDoorOpen
                       onClick={logOut}
@@ -214,7 +198,9 @@ const NavWrapper = () => {
                   <h3 className="text-lg font-bold">
                     {userData.name ? userData.name : "user"}
                   </h3>
-                  <p className="py-4">{`Created when: ${formatterDate}`}</p>
+                  <p className="py-4">{`Created when: ${
+                    userData.createdAt ? userData.createdAt : `Date...`
+                  }`}</p>
                   {userData.name ? (
                     <LuDoorOpen
                       onClick={logOut}

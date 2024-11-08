@@ -11,7 +11,7 @@ const Card = ({ name, price }) => {
       />
       <h2 className="font-medium sm:text-2xl">{name}</h2>
       <p className="sm:text-xl">{price}</p>
-      <BsCart2 className="bg-[#a2d2ff] w-10 h-6 sm:w-12 sm:h-8 rounded-md py-1 cursor-pointer" />
+      <BsCart2 className="bg-[#a2d2ff] w-10 h-6 sm:w-12 sm:h-8 rounded-md py-1 cursor-pointer mt-1.5" />
     </div>
   );
 };

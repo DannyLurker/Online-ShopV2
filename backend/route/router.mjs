@@ -65,9 +65,19 @@ Router.get(`/`, authenticate, async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
+    const formattedDate = new Intl.DateTimeFormat("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      timeZone: "Asia/Jakarta",
+    }).format(findUser.createdAt);
+
     return res.json({
       name: findUser.name,
-      createdAt: findUser.createdAt,
+      createdAt: formattedDate,
     });
   } catch (e) {
     console.log(`error: ${e.message}`);

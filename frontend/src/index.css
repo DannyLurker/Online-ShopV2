@@ -26,7 +26,7 @@
     @apply bg-[#ffc8dd] rounded-full shadow-md px-3 py-0.5 font-semibold hover:bg-[#ffafcc] transition-colors duration-300;
   }
   .button-submit {
-    @apply w-[63%] h-10 bg-[#b68ccf] rounded-md text-white font-semibold mt-2;
+    @apply w-[63%] h-10 bg-[#b68ccf] rounded-md text-white font-semibold mt-1;
   }
   .input {
     @apply bg-[#cdb4db] placeholder-gray-500 outline-none border-b-2 border-gray-500 mb-5 invalid:focus:border-red-600;

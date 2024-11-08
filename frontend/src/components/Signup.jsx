@@ -1,14 +1,19 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import ErrorMessage from "./ErrorMessage";
-
+import { FaArrowLeft, FaRegEyeSlash, FaRegEye } from "react-icons/fa";
 const Signup = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState([]);
+  const [isCheck, setIsCheck] = useState(true);
   const navigate = useNavigate();
+
+  const handleIsCheck = () => {
+    setIsCheck((prev) => !prev);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -35,7 +40,7 @@ const Signup = () => {
     <div className="bg-gradient-to-t from-[#a2d2ff] to-[#bde0fe] min-h-screen flex flex-col justify-center items-center">
       <ErrorMessage error={error} />
 
-      <div className="bg-[#cdb4db] w-[250px] h-[320px] rounded-md shadow-md opacity-75 p-2">
+      <div className="bg-[#cdb4db] w-[250px] h-[320px] sm:max-w-[330px] sm:max-h-[380px] rounded-md shadow-md opacity-75 p-2">
         <div className="flex justify-center mt-2 flex-col text-center px-2 mb-3">
           <h1 className="text-3xl font-bold ">Sign Up</h1>
           <p>
@@ -64,18 +69,35 @@ const Signup = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
-            <input
-              type="password"
-              className="input"
-              placeholder="Password..."
-              required
-              minLength={8}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
+            <div className="relative">
+              <input
+                type={isCheck ? "password" : "text"}
+                className="input"
+                placeholder="Password..."
+                required
+                minLength={8}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              {isCheck ? (
+                <FaRegEyeSlash
+                  className="absolute top-0 right-8 cursor-pointer"
+                  onClick={handleIsCheck}
+                />
+              ) : (
+                <FaRegEye
+                  className="absolute top-0 right-8 cursor-pointer"
+                  onClick={handleIsCheck}
+                />
+              )}
+            </div>
+
             <button type="submit" className="button-submit">
               Submit
             </button>
+            <Link to="/">
+              <FaArrowLeft />
+            </Link>
           </form>
         </div>
       </div>

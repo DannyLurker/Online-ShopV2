@@ -1,16 +1,8 @@
-import React, { useEffect } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import React from "react";
+import { Outlet, Navigate } from "react-router-dom";
 
 const PrivateWrapper = ({ auth }) => {
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!auth) {
-      navigate("/login");
-    }
-  }, [auth, navigate]);
-
-  return auth ? <Outlet /> : null;
+  return auth ? <Outlet /> : <Navigate to="/login" />;
 };
 
 export default PrivateWrapper;
