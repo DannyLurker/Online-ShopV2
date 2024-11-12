@@ -3,12 +3,15 @@ import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import ErrorMessage from "./ErrorMessage";
 import { FaArrowLeft, FaRegEyeSlash, FaRegEye } from "react-icons/fa";
+import Spinner from "./Spinner";
+
 const Signup = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState([]);
   const [isCheck, setIsCheck] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
 
   const handleIsCheck = () => {
@@ -16,8 +19,9 @@ const Signup = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
     try {
+      e.preventDefault();
+      setIsSubmitting(true);
       await axios.post(`http://localhost:3000/signup`, {
         name,
         email,
@@ -25,6 +29,7 @@ const Signup = () => {
       });
       navigate(`/login`);
     } catch (e) {
+      setIsSubmitting(false);
       console.error("Error :", e.response?.data || e.message);
       const errorData = e.response?.data;
 
@@ -38,12 +43,17 @@ const Signup = () => {
 
   return (
     <div className="bg-gradient-to-t from-[#a2d2ff] to-[#bde0fe] min-h-screen flex flex-col justify-center items-center">
+      {isSubmitting && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <Spinner />
+        </div>
+      )}
       <ErrorMessage error={error} />
 
-      <div className="bg-[#cdb4db] w-[250px] h-[320px] sm:max-w-[330px] sm:max-h-[380px] rounded-md shadow-md opacity-75 p-2">
+      <div className="relative bg-[#cdb4db] w-[280px] h-[330px] sm:w-[320px] sm:h-[370px] md:w-[350px] md:h-[400px] rounded-md shadow-md opacity-75 p-2">
         <div className="flex justify-center mt-2 flex-col text-center px-2 mb-3">
-          <h1 className="text-3xl font-bold ">Sign Up</h1>
-          <p>
+          <h1 className="text-3xl md:text-4xl">Sign Up</h1>
+          <p className="sm:text-xl md:text-2xl mt-2">
             Already Have an Account?
             <a href="/login" className="text-blue-500">
               &nbsp; Log In
@@ -54,7 +64,7 @@ const Signup = () => {
           <form onSubmit={handleSubmit}>
             <input
               type="text"
-              className="input"
+              className="input sm:mt-4 md:w-[250px] sm:text-xl"
               placeholder="Name..."
               required
               minLength={3}
@@ -63,7 +73,7 @@ const Signup = () => {
             />
             <input
               type="email"
-              className="input"
+              className="input md:w-[250px] sm:text-xl"
               placeholder="Email..."
               required
               value={email}
@@ -72,7 +82,7 @@ const Signup = () => {
             <div className="relative">
               <input
                 type={isCheck ? "password" : "text"}
-                className="input"
+                className="input md:w-[250px] sm:text-xl"
                 placeholder="Password..."
                 required
                 minLength={8}
@@ -81,22 +91,22 @@ const Signup = () => {
               />
               {isCheck ? (
                 <FaRegEyeSlash
-                  className="absolute top-0 right-8 cursor-pointer"
+                  className="absolute top-0 right-10 sm:right-16 md:right-12 cursor-pointer"
                   onClick={handleIsCheck}
                 />
               ) : (
                 <FaRegEye
-                  className="absolute top-0 right-8 cursor-pointer"
+                  className="absolute top-0 right-10 sm:right-16 md:right-12 cursor-pointer"
                   onClick={handleIsCheck}
                 />
               )}
             </div>
 
-            <button type="submit" className="button-submit">
+            <button type="submit" className="button-submit ">
               Submit
             </button>
             <Link to="/">
-              <FaArrowLeft />
+              <FaArrowLeft className="absolute bottom-4 left-4" />
             </Link>
           </form>
         </div>

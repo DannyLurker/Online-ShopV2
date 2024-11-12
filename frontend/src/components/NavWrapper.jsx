@@ -54,9 +54,8 @@ const NavWrapper = () => {
 
   useEffect(() => {
     getData();
-    const intervalId = setTimeout(() => {
-      setInterval(refreshToken, 13 * 60 * 1000);
-    }, 13 * 60 * 1000);
+    const intervalId = setInterval(refreshToken, 13 * 60 * 1000);
+
     return () => {
       setUserData({});
       clearInterval(intervalId);
@@ -81,7 +80,7 @@ const NavWrapper = () => {
           >
             <ul className="flex flex-col md:flex-row md:items-center gap-8 md:gap-[4vw]">
               <li>
-                <a className="underline-link" href="#">
+                <a className="underline-link" href="/marketplace">
                   Marketplace
                 </a>
               </li>

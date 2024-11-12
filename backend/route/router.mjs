@@ -75,7 +75,7 @@ Router.get(`/`, authenticate, async (req, res) => {
       timeZone: "Asia/Jakarta",
     }).format(findUser.createdAt);
 
-    return res.json({
+    return res.status(200).json({
       name: findUser.name,
       createdAt: formattedDate,
     });
@@ -136,6 +136,7 @@ Router.post(
         .json({ message: "New user data successfully created and stored" });
     } catch (e) {
       console.log(`error: ${e.message}`);
+      res.status(500).json({ message: "Server error" });
     }
   }
 );
@@ -220,8 +221,32 @@ Router.post(`/refresh-token`, (req, res) => {
       maxAge: 15 * 60 * 1000,
     });
 
-    return res.json({ message: "Access token refreshed" });
+    return res.status(201).json({ message: "Access token refreshed" });
   });
+});
+
+//MARKETPLACE ROUTE FOR GET EVERY DATA
+Router.get(`/marketplace`, async (req, res) => {
+  try {
+    const products = await userProductModel.find();
+    if (!products) {
+      res.status(404).json({ message: "Data not found or no one sells stuff" });
+    }
+
+    const formattedProducts = products.map((product) => ({
+      ...product._doc,
+      price: new Intl.NumberFormat(`id-ID`, {
+        style: `currency`,
+        currency: `IDR`,
+      }).format(product.price),
+    }));
+
+    return res
+      .status(200)
+      .json({ message: "Succesful get the data", products: formattedProducts });
+  } catch (e) {
+    console.log(`Error: ${e.message}`);
+  }
 });
 
 //PRODUCT ROUTE FOR GET DATA
@@ -231,7 +256,9 @@ Router.get(`/product`, authenticate, async (req, res) => {
     const products = await userProductModel.find({ userId });
 
     if (products.length === 0) {
-      return res.status(404).json({ message: "Data not found" });
+      return res
+        .status(404)
+        .json({ message: "Data not found or please add a product" });
     }
 
     // Format harga setiap produk secara terpisah
@@ -283,7 +310,6 @@ Router.post(
     const userId = req.user._id;
     const { name, description, price } = req.body;
 
-    console.log({ name, description, price, userId });
     try {
       const newProduct = new userProductModel({
         userId: userId,
@@ -293,11 +319,43 @@ Router.post(
       });
 
       newProduct.save();
+      return res.status(200).json({ message: "Data successful added" });
     } catch (e) {
       console.log(`Error: ${e.message}`);
     }
   }
 );
+
+//INFORMATION ROUTE FOR GET SPESIFIC DATA
+Router.get(`/information/:id`, async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({ error: "Missing ID parameter" });
+    }
+
+    const product = await userProductModel.findOne({ _id: id });
+
+    if (!product) {
+      return res.status(404).json({ error: "Product not found" });
+    }
+
+    const formattedProduct = {
+      ...product._doc,
+      price: new Intl.NumberFormat(`ID-id`, {
+        style: "currency",
+        currency: `IDR`,
+      }).format(product.price),
+    };
+
+    return res
+      .status(200)
+      .json({ product: formattedProduct, message: "Succesful get the data" });
+  } catch (e) {
+    console.log(`Error: ${e.message}`);
+  }
+});
 
 //LOGOUT
 Router.delete(`/logout`, (req, res) => {

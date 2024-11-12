@@ -30,6 +30,7 @@ const Login = () => {
       navigate("/");
     } catch (e) {
       navigate("/login");
+      setIsSubmitting(false);
       console.error("Error :", e.response?.data || e.message);
       const errorData = e.response?.data;
 
@@ -51,10 +52,10 @@ const Login = () => {
 
       <ErrorMessage error={error} />
 
-      <div className="bg-[#cdb4db] w-[250px] h-[300px] sm:max-w-[300px] sm:max-h-[350px] rounded-md shadow-md opacity-75 p-2">
+      <div className="relative bg-[#cdb4db] w-[250px] h-[300px] sm:w-[300px] sm:h-[350px] md:w-[350px] md:h-[400px] rounded-md shadow-md opacity-75 p-2">
         <div className="flex justify-center mt-2 flex-col text-center px-2 mb-3">
-          <h1 className="text-3xl font-bold ">Login</h1>
-          <p>
+          <h1 className="text-3xl md:text-4xl font-bold ">Login</h1>
+          <p className="sm:text-xl md:text-2xl mt-2">
             Don't Have an Account yet?
             <a href="/signup" className="text-blue-500">
               Sign Up
@@ -65,7 +66,7 @@ const Login = () => {
           <form onSubmit={handleSubmit}>
             <input
               type="email"
-              className="input"
+              className="input sm:mt-4 md:w-[250px] sm:text-xl"
               placeholder="Email..."
               required
               minLength={3}
@@ -75,7 +76,7 @@ const Login = () => {
             <div className="relative">
               <input
                 type={isCheck ? "password" : "text"}
-                className="input"
+                className="input md:w-[250px] sm:text-xl"
                 placeholder="Password..."
                 required
                 minLength={8}
@@ -95,12 +96,12 @@ const Login = () => {
               )}
             </div>
 
-            <button type="submit" className="button-submit">
+            <button type="submit" className="button-submit sm:mt-4 md:mt-8">
               Submit
             </button>
 
             <Link to="/signup">
-              <FaArrowLeft className="mt-2" />
+              <FaArrowLeft className="absolute bottom-4 left-4" />
             </Link>
           </form>
         </div>

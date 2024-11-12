@@ -2,9 +2,10 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Card from "./Card.jsx";
+import { IoPencilOutline } from "react-icons/io5";
 
 const Product = () => {
-  const [productData, setProductData] = useState([]);
+  const [productDatas, setProductDatas] = useState([]);
   const [error, setError] = useState("");
 
   const getData = async () => {
@@ -12,14 +13,12 @@ const Product = () => {
       const response = await axios.get(`http://localhost:3000/product`, {
         withCredentials: true,
       });
-      setProductData(response?.data?.product);
+      setProductDatas(response?.data?.product);
     } catch (e) {
       console.log("Error:", e.response?.data || e.message);
       setError(e.response?.data?.message || e.message);
     }
   };
-
-  console.log(productData);
 
   useEffect(() => {
     getData();
@@ -36,19 +35,21 @@ const Product = () => {
       {error && (
         <div className="flex flex-col justify-center text-center items-center h-[78vh] sm:h-[80vh] font-bold text-5xl ">
           <h1>! 404 !</h1>
-          <div> {error}</div>
+          <div>{error}</div>
         </div>
       )}
 
-      {productData.length > 0 && (
-        <div className="grid place-content-around grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 p-2 gap-2 ">
-          <ul>
-            {productData.map((product, index) => (
-              <li key={index}>
-                <Card name={product.name} price={product.price} />
-              </li>
-            ))}
-          </ul>
+      {productDatas.length > 0 && (
+        <div className="grid place-content-around grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 p-2 gap-2">
+          {productDatas.map((product, index) => (
+            <div key={index}>
+              <Card name={product.name} price={product.price}>
+                <Link to={`/product/edit/${product._id}`}>
+                  <IoPencilOutline className="w-10 h-6 sm:w-12 sm:h-8 mt-1.5" />
+                </Link>
+              </Card>
+            </div>
+          ))}
         </div>
       )}
     </>
