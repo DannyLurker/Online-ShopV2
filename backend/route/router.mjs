@@ -54,7 +54,7 @@ const authenticate = (req, res, next) => {
   });
 };
 
-// HOME ROUTE FOR GET DATA
+// HOMEPAGE ROUTE FOR GET DATA
 Router.get(`/`, authenticate, async (req, res) => {
   try {
     const userId = req.user._id;
@@ -130,7 +130,7 @@ Router.post(
         password: hashedPassword,
       });
 
-      newUser.save();
+      await newUser.save();
       return res
         .status(201)
         .json({ message: "New user data successfully created and stored" });
@@ -171,7 +171,7 @@ Router.post(`/login`, async (req, res) => {
       httpOnly: true,
       secure: true,
       sameSite: "strict",
-      maxAge: 3 * 24 * 60 * 60 * 1000,
+      maxAge: 1 * 24 * 60 * 60 * 1000,
     });
 
     return res.status(202).json({ message: "User successfully logged in" });
@@ -212,7 +212,7 @@ Router.post(`/refresh-token`, (req, res) => {
       return res.status(403).json({ message: "Refresh token is invalid" });
     }
 
-    const accessToken = generateAccessToken({ email: user.email });
+    const accessToken = generateAccessToken({ _id: user._id });
 
     res.cookie("jwt", accessToken, {
       httpOnly: true,
@@ -241,9 +241,31 @@ Router.get(`/marketplace`, async (req, res) => {
       }).format(product.price),
     }));
 
+    const findProducts = await userProductModel.aggregate([
+      { $sample: { size: 20 } },
+    ]);
+
+    if (!findProducts || findProducts.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "Data not found or no one sells stuff" });
+    }
+
+    const formattedProductsHomePage = findProducts.map((product) => ({
+      ...product,
+      price: new Intl.NumberFormat(`id-ID`, {
+        style: `currency`,
+        currency: `IDR`,
+      }).format(product.price),
+    }));
+
     return res
       .status(200)
-      .json({ message: "Succesful get the data", products: formattedProducts });
+      .json({
+        message: "Succesful get the data",
+        products: formattedProducts,
+        productsHomePage: formattedProductsHomePage,
+      });
   } catch (e) {
     console.log(`Error: ${e.message}`);
   }
@@ -289,7 +311,6 @@ Router.post(
     .withMessage("Username cant be empty.")
     .isLength({ min: 3 })
     .withMessage("The username must contain at least 3 characters"),
-
   body("description")
     .notEmpty()
     .withMessage("Description cant be empty")
@@ -318,7 +339,7 @@ Router.post(
         price: price,
       });
 
-      newProduct.save();
+      await newProduct.save();
       return res.status(200).json({ message: "Data successful added" });
     } catch (e) {
       console.log(`Error: ${e.message}`);
