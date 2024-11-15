@@ -29,7 +29,7 @@
     @apply w-[63%] h-10 bg-[#b68ccf] rounded-md text-white font-semibold mt-1;
   }
   .input {
-    @apply bg-[#cdb4db] placeholder-gray-500 outline-none border-b-2 border-gray-500 mb-5 invalid:focus:border-red-600;
+    @apply bg-[#cdb4db] placeholder-gray-500 outline-none border-b-2 border-gray-500 mb-2 sm:mb-5 invalid:focus:border-red-600;
   }
   .modal {
     @apply pointer-events-none invisible fixed flex z-10 cursor-pointer items-end justify-center overflow-hidden overscroll-contain opacity-0 transition-all duration-300 ease-in-out peer-checked:pointer-events-auto peer-checked:visible peer-checked:opacity-100 peer-checked:[&>*]:translate-y-0 peer-checked:[&>*]:scale-100 right-0 top-[82px] mr-2 mt-2;

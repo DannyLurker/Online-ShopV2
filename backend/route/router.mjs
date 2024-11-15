@@ -259,13 +259,11 @@ Router.get(`/marketplace`, async (req, res) => {
       }).format(product.price),
     }));
 
-    return res
-      .status(200)
-      .json({
-        message: "Succesful get the data",
-        products: formattedProducts,
-        productsHomePage: formattedProductsHomePage,
-      });
+    return res.status(200).json({
+      message: "Succesful get the data",
+      products: formattedProducts,
+      productsHomePage: formattedProductsHomePage,
+    });
   } catch (e) {
     console.log(`Error: ${e.message}`);
   }
@@ -353,13 +351,13 @@ Router.get(`/information/:id`, async (req, res) => {
     const { id } = req.params;
 
     if (!id) {
-      return res.status(400).json({ error: "Missing ID parameter" });
+      return res.status(400).json({ message: "Missing ID parameter" });
     }
 
     const product = await userProductModel.findOne({ _id: id });
 
     if (!product) {
-      return res.status(404).json({ error: "Product not found" });
+      return res.status(404).json({ message: "Product not found" });
     }
 
     const formattedProduct = {
@@ -377,6 +375,72 @@ Router.get(`/information/:id`, async (req, res) => {
     console.log(`Error: ${e.message}`);
   }
 });
+
+//GET DATA FOR EDIT PRODUCT ROUTE
+Router.get(`/product/edit/:id`, async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({ message: "Missing ID parameter" });
+    }
+
+    const product = await userProductModel.findOne({ _id: id });
+
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    return res.status(200).json({ product });
+  } catch (e) {
+    console.log(`Error: ${e.message}`);
+  }
+});
+
+//PUT DATA FOR EDIT PRODUCT ROUTE
+Router.put(
+  `/product/edit/:id`,
+  body("name")
+    .notEmpty()
+    .withMessage("Username cant be empty.")
+    .isLength({ min: 3 })
+    .withMessage("The username must contain at least 3 characters"),
+  body("description")
+    .notEmpty()
+    .withMessage("Description cant be empty")
+    .isLength({ min: "3" })
+    .withMessage("The Description must contain at least 3 characters"),
+  body("price")
+    .notEmpty()
+    .withMessage("Price cant be empty")
+    .isNumeric()
+    .withMessage("Price must be a number"),
+  async (req, res) => {
+    try {
+      const { name, description, price, userId } = req.body;
+
+      const findProduct = await userProductModel.findOne({ _id: userId });
+
+      if (!findProduct) {
+        return res.status(404).json({ message: "Product not found" });
+      }
+
+      const options = { upsert: false };
+
+      const updateDoc = {
+        name,
+        description,
+        price,
+      };
+
+      await userProductModel.updateOne(findProduct, updateDoc, options);
+
+      return res.status(200).json({ message: "Data succesful updated" });
+    } catch (e) {
+      console.log(`Error: ${e.message}`);
+    }
+  } 
+);
 
 //LOGOUT
 Router.delete(`/logout`, (req, res) => {

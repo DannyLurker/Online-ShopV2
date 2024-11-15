@@ -63,7 +63,7 @@ const NavWrapper = () => {
   }, []);
 
   return (
-    <div className="bg-gradient-to-t from-[#a2d2ff] to-[#bde0fe] min-h-screen h-full pt-16">
+    <div className="bg-gradient-to-t from-[#a2d2ff] to-[#bde0fe] min-h-screen max-h-full pt-16">
       <header className="fixed top-0 left-0 w-full bg-[#cdb4db] z-20">
         <nav className="flex justify-between items-center p-5 w-[92%] mx-auto">
           <div>

@@ -40,11 +40,11 @@ const AddProduct = () => {
 
   return (
     <>
-      <div className="flex justify-center items-center h-[78vh] sm:[80vh] flex-col">
+      <div className="flex justify-center items-center h-[78vh] sm:[80vh] flex-col mt-16">
         <ErrorMessage error={error} />
-        <div className="w-[400px] h-[400px] sm:w-[50%] max-w-[1240px] max-h-[960px] bg-[#cdb4db] opacity-85 rounded-md shadow-sm p-2">
+        <div className="w-[320px] max-h-[310px] sm:w-[50%] sm:max-w-[1240px] sm:max-h-[960px] bg-[#cdb4db] opacity-85 rounded-md shadow-sm p-2">
           <div className="flex justify-center flex-col text-center mt-4 relative">
-            <h1 className="text-2xl font-bold mb-16">Add a new product</h1>
+            <h1 className="text-2xl font-bold mb-2">Add a new product</h1>
 
             <form
               onSubmit={handleSubmit}
@@ -52,7 +52,7 @@ const AddProduct = () => {
             >
               <input
                 type="text"
-                className="input sm:w-[60%]"
+                className="input w-[68%] sm:pl-0 sm:w-[60%] "
                 placeholder="Product name..."
                 minLength={3}
                 required
@@ -61,17 +61,17 @@ const AddProduct = () => {
               />
               <textarea
                 type="text"
-                className="input sm:w-[60%]"
-                placeholder="Description..."
+                className="w-[68%] sm:w-[60%] outline-none bg-transparent border-gray-500 border-2 px-1 py-0.5"
                 minLength={3}
+                placeholder="Description Box"
                 required
                 value={description}
                 onChange={(e) => setDescrition(e.target.value)}
               />
-              <div className="relative sm:w-[60%] ">
+              <div className="relative sm:w-[60%]">
                 <input
                   type="number"
-                  className="input w-full pl-6"
+                  className="input w-full pl-6 m-0"
                   placeholder="Price..."
                   minLength={1}
                   min={1}
