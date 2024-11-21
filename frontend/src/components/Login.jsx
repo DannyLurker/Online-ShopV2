@@ -96,7 +96,7 @@ const Login = () => {
               )}
             </div>
 
-            <button type="submit" className="button-submit sm:mt-4 md:mt-8">
+            <button type="submit" className="button-submit mt-4 md:mt-8">
               Submit
             </button>
 

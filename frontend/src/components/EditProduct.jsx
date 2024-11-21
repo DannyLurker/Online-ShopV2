@@ -8,19 +8,27 @@ const EditProduct = () => {
   const [description, setDescrition] = useState("");
   const [price, setPrice] = useState(0);
   const [userId, setUserId] = useState("");
+  const [image, setImage] = useState(null);
   const navigate = useNavigate();
   const { id } = useParams();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("description", description);
+      formData.append("price", price);
+      formData.append("image", image);
+      formData.append("userId", userId);
       const response = await axios.put(
         `http://localhost:3000/product/edit/${id}`,
+        formData,
         {
-          name,
-          description,
-          price,
-          userId,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          withCredentials: true,
         }
       );
       if (response.status === 200 || response.status === 201) {
@@ -60,6 +68,14 @@ const EditProduct = () => {
               onSubmit={handleSubmit}
               className="flex flex-col items-center gap-4 w-full"
             >
+              <input
+                type="file"
+                name="image"
+                className="input w-[68%] sm:pl-0 sm:w-[60%]"
+                placeholder="Image file..."
+                required
+                onChange={(e) => setImage(e.target.files[0])}
+              />
               <input
                 type="text"
                 className="input w-[68%] sm:pl-0 sm:w-[60%] "

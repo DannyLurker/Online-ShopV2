@@ -24,12 +24,13 @@ const Information = () => {
 
   return (
     <>
-      <div className="flex justify-center items-center h-[78vh] sm:h-[80vh] mt-16">
-        <div className="bg-[#bde0fe] w-[270px] h-max-[350px] sm:w-[550px] sm:h-max-[500px] md:w-[650px] md:h-max-[600px] lg:w-[960px] lg:h-max-[720px] rounded-md shadow-md p-2">
+      <div className="flex flex-col justify-center items-center h-[78vh] sm:h-[80vh] mt-16">
+        <h1 className="text-5xl font-bold mb-4">Information</h1>
+        <div className="bg-[#bde0fe] min-h-fit w-[270px] sm:w-[550px]  md:w-[650px] lg:w-[960px] rounded-md shadow-md p-2">
           <img
-            src="../photo-1701338678701-c053ba5d6ee1.jpeg"
-            alt="PHT"
-            className="rounded-md "
+            src={`http://localhost:3000${productData.imageUrl}`}
+            alt={`${productData.imageUrl}`}
+            className="rounded-md  max-h-[200px]  sm:max-h-[250px]  md:max-h-[300px]  lg:max-h-[400px] mx-auto mt-2"
           />
           <h2 className="sm:text-xl font-medium">{productData.name}</h2>
           <h3 className="font-medium">Description : </h3>

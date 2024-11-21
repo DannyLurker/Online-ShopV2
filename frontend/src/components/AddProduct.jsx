@@ -9,19 +9,27 @@ const AddProduct = () => {
   const [description, setDescrition] = useState("");
   const [price, setPrice] = useState(0);
   const [error, setError] = useState([]);
+  const [image, setImage] = useState(null);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("description", description);
+    formData.append("price", price);
+    formData.append("image", image);
+
     try {
       const response = await axios.post(
         `http://localhost:3000/product/add`,
+        formData,
         {
-          name,
-          description,
-          price,
-        },
-        { withCredentials: true }
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          withCredentials: true,
+        }
       );
       if (response.status === 200 || response.status === 201) {
         navigate("/product");
@@ -33,7 +41,7 @@ const AddProduct = () => {
       setError(
         Array.isArray(errorData?.error)
           ? errorData.error.map((err) => err.msg)
-          : [errorData?.message || "An error occurred"]
+          : [errorData?.message || "File can't be more than 5MB"]
       );
     }
   };
@@ -42,7 +50,7 @@ const AddProduct = () => {
     <>
       <div className="flex justify-center items-center h-[78vh] sm:[80vh] flex-col mt-16">
         <ErrorMessage error={error} />
-        <div className="w-[320px] max-h-[310px] sm:w-[50%] sm:max-w-[1240px] sm:max-h-[960px] bg-[#cdb4db] opacity-85 rounded-md shadow-sm p-2">
+        <div className="w-[320px] min-h-fit sm:w-[50%] sm:max-w-[1240px] bg-[#cdb4db] opacity-85 rounded-md shadow-sm p-2">
           <div className="flex justify-center flex-col text-center mt-4 relative">
             <h1 className="text-2xl font-bold mb-2">Add a new product</h1>
 
@@ -50,6 +58,14 @@ const AddProduct = () => {
               onSubmit={handleSubmit}
               className="flex flex-col items-center gap-4 w-full"
             >
+              <input
+                type="file"
+                name="image"
+                className="input w-[68%] sm:pl-0 sm:w-[60%]"
+                placeholder="Image file..."
+                required
+                onChange={(e) => setImage(e.target.files[0])}
+              />
               <input
                 type="text"
                 className="input w-[68%] sm:pl-0 sm:w-[60%] "
@@ -63,7 +79,7 @@ const AddProduct = () => {
                 type="text"
                 className="w-[68%] sm:w-[60%] outline-none bg-transparent border-gray-500 border-2 px-1 py-0.5"
                 minLength={3}
-                placeholder="Description Box"
+                placeholder="Description Box..."
                 required
                 value={description}
                 onChange={(e) => setDescrition(e.target.value)}

@@ -73,7 +73,7 @@ const Signup = () => {
             />
             <input
               type="email"
-              className="input md:w-[250px] sm:text-xl"
+              className="input md:w-[250px] sm:text-xl mt-2 sm:mt-0"
               placeholder="Email..."
               required
               value={email}
@@ -82,7 +82,7 @@ const Signup = () => {
             <div className="relative">
               <input
                 type={isCheck ? "password" : "text"}
-                className="input md:w-[250px] sm:text-xl"
+                className="input md:w-[250px] sm:text-xl mt-2 sm:mt-0"
                 placeholder="Password..."
                 required
                 minLength={8}
@@ -102,7 +102,7 @@ const Signup = () => {
               )}
             </div>
 
-            <button type="submit" className="button-submit ">
+            <button type="submit" className="button-submit mt-6 sm:mt-0">
               Submit
             </button>
             <Link to="/">

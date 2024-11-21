@@ -63,7 +63,7 @@ const NavWrapper = () => {
   }, []);
 
   return (
-    <div className="bg-gradient-to-t from-[#a2d2ff] to-[#bde0fe] min-h-screen max-h-full pt-16">
+    <div className="bg-gradient-to-tr from-[#a2d2ff] to-[#bde0fe] min-h-screen max-h-fit pt-16">
       <header className="fixed top-0 left-0 w-full bg-[#cdb4db] z-20">
         <nav className="flex justify-between items-center p-5 w-[92%] mx-auto">
           <div>
@@ -78,7 +78,7 @@ const NavWrapper = () => {
                 : "left-[-100%] top-[100%] navbar transition-all duration-500"
             }
           >
-            <ul className="flex flex-col md:flex-row md:items-center gap-8 md:gap-[4vw]">
+            <ul className="flex flex-col md:flex-row md:items-center gap-8 md:gap-[2vw]">
               <li>
                 <a className="underline-link" href="/marketplace">
                   Marketplace

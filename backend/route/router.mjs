@@ -6,6 +6,8 @@ import dotenv from "dotenv";
 import bcrypt from "bcrypt";
 import { body, validationResult } from "express-validator";
 import { userLoginModel, userProductModel } from "../model/model.mjs";
+import upload from "../imgUploader/upload.mjs";
+import deleteFile from "../imgUploader/deleteFile.mjs";
 
 // INITIALIZE EXPRESS
 const Router = express.Router();
@@ -20,6 +22,7 @@ Router.use(
 );
 Router.use(cookieParser());
 Router.use(express.json());
+Router.use("/uploads", express.static("uploads"));
 
 // ENV
 dotenv.config();
@@ -304,43 +307,49 @@ Router.get(`/product`, authenticate, async (req, res) => {
 Router.post(
   `/product/add`,
   authenticate,
+  upload.single("image"),
   body("name")
     .notEmpty()
-    .withMessage("Username cant be empty.")
+    .withMessage("Name can't be empty.")
     .isLength({ min: 3 })
-    .withMessage("The username must contain at least 3 characters"),
+    .withMessage("The name must contain at least 3 characters"),
   body("description")
     .notEmpty()
-    .withMessage("Description cant be empty")
-    .isLength({ min: "3" })
-    .withMessage("The Description must contain at least 3 characters"),
+    .withMessage("Description can't be empty")
+    .isLength({ min: 3 })
+    .withMessage("The description must contain at least 3 characters"),
   body("price")
     .notEmpty()
-    .withMessage("Price cant be empty")
+    .withMessage("Price can't be empty")
     .isNumeric()
     .withMessage("Price must be a number"),
-
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const userId = req.user._id;
     const { name, description, price } = req.body;
+    const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
+
+    if (!imageUrl) {
+      return res.status(400).json({ message: "Image is required" });
+    }
 
     try {
       const newProduct = new userProductModel({
-        userId: userId,
-        name: name,
-        description: description,
-        price: price,
+        userId: req.user._id,
+        name,
+        description,
+        price,
+        imageUrl,
       });
 
       await newProduct.save();
-      return res.status(200).json({ message: "Data successful added" });
+      return res.status(200).json({ message: "Product successfully added" });
     } catch (e) {
       console.log(`Error: ${e.message}`);
+      res.status(500).json({ message: "Server error" });
     }
   }
 );
@@ -400,6 +409,7 @@ Router.get(`/product/edit/:id`, async (req, res) => {
 //PUT DATA FOR EDIT PRODUCT ROUTE
 Router.put(
   `/product/edit/:id`,
+  upload.single("image"),
   body("name")
     .notEmpty()
     .withMessage("Username cant be empty.")
@@ -418,11 +428,21 @@ Router.put(
   async (req, res) => {
     try {
       const { name, description, price, userId } = req.body;
+      const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
+
+      if (!imageUrl) {
+        return res.status(400).json({ message: "Image is required" });
+      }
 
       const findProduct = await userProductModel.findOne({ _id: userId });
 
       if (!findProduct) {
         return res.status(404).json({ message: "Product not found" });
+      }
+
+      if (req.file) {
+        const oldImagePath = `.${findProduct.imageUrl}`;
+        deleteFile(oldImagePath);
       }
 
       const options = { upsert: false };
@@ -431,6 +451,7 @@ Router.put(
         name,
         description,
         price,
+        imageUrl,
       };
 
       await userProductModel.updateOne(findProduct, updateDoc, options);
@@ -439,7 +460,7 @@ Router.put(
     } catch (e) {
       console.log(`Error: ${e.message}`);
     }
-  } 
+  }
 );
 
 //LOGOUT

@@ -56,6 +56,10 @@ const userProductSchema = new Schema({
     type: Number,
     min: 1,
   },
+  imageUrl: {
+    type: String,
+    required: true,
+  },
 });
 
 export const userProductModel = userProductConnection.model(
