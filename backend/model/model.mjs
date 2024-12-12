@@ -1,19 +1,11 @@
-import mongoose, { createConnection, Schema } from "mongoose";
-import dotenv from "dotenv";
-dotenv.config();
+import {
+  userLoginConnection,
+  userCartsConnection,
+  userProductConnection,
+  userHistoryConnection,
+} from "../db/connect.mjs";
 
-const userLoginConnection = createConnection(
-  process.env.USER_LOGIN_DB_CONNECTION
-);
-const userProductConnection = createConnection(
-  process.env.USER_PRODUCT_DB_CONNECTION
-);
-const userCartsConnection = createConnection(
-  process.env.USER_CARTS_DB_CONNECTION
-);
-const userHistoryConnection = createConnection(
-  process.env.USER_HISTORY_DB_CONNECTION
-);
+import { mongoose, Schema } from "mongoose";
 
 const userLoginSchema = new Schema(
   {
@@ -56,9 +48,9 @@ const userProductSchema = new Schema({
     type: Number,
     min: 1,
   },
-  imageUrl: {
+  productId: {
+    require: true,
     type: String,
-    required: true,
   },
 });
 
