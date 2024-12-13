@@ -1,21 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
-import ErrorMessage from "./ErrorMessage";
 import { FaArrowLeft } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
-
-function converToBase64(file) {
-  return new Promise((resolve, reject) => {
-    const fileReader = new FileReader();
-    fileReader.readAsDataURL(file);
-    fileReader.onload = () => {
-      resolve(fileReader.result);
-    };
-    fileReader.onerror = (error) => {
-      reject(error);
-    };
-  });
-}
+import ErrorMessage from "../componetsPart/ErrorMessage";
 
 const AddProduct = () => {
   const [name, setName] = useState("");

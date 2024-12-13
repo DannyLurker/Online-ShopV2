@@ -8,12 +8,26 @@ const formatPrice = (price) =>
   }).format(price);
 
 export const getMarketPlace = asyncWrapper(async (req, res) => {
-  const [products, sampledProducts] = await Promise.all([
-    userProductModel.find().lean(),
-    userProductModel.aggregate([{ $sample: { size: 20 } }]),
+  const { search } = req.query;
+
+  let products;
+
+  if (search) {
+    products = await userProductModel
+      .find({
+        name: { $regex: search, $options: "i" },
+      })
+      .limit(60)
+      .lean();
+  } else {
+    products = await userProductModel.aggregate([{ $sample: { size: 60 } }]);
+  }
+
+  const sampledProducts = await userProductModel.aggregate([
+    { $sample: { size: 24 } },
   ]);
 
-  if (!products.length || !sampledProducts.length) {
+  if (!products.length && !sampledProducts.length) {
     return res
       .status(404)
       .json({ message: "Data not found or no one sells stuff" });

@@ -1,8 +1,8 @@
 import { useState, lazy, Suspense, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import axios from "axios";
-import PrivateWrapper from "./components/PrivateWrapper";
-import Spinner from "./components/Spinner";
+import PrivateWrapper from "./utils/PrivateWrapper";
+import Spinner from "./componetsPart/Spinner";
 
 const NavWrapper = lazy(() => import("./components/NavWrapper"));
 const HomePage = lazy(() => import("./components/HomePage"));

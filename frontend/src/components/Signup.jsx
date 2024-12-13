@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
-import ErrorMessage from "./ErrorMessage";
+import ErrorMessage from "../componetsPart/ErrorMessage";
 import { FaArrowLeft, FaRegEyeSlash, FaRegEye } from "react-icons/fa";
-import Spinner from "./Spinner";
+import Spinner from "../componetsPart/Spinner";
 
 const Signup = () => {
   const [name, setName] = useState("");

@@ -2,8 +2,8 @@ import { React, lazy, useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { BsInfoCircle } from "react-icons/bs";
-const Carousel = lazy(() => import("./Carousel"));
-const Card = lazy(() => import("./Card"));
+const Carousel = lazy(() => import("../componetsPart/Carousel"));
+const Card = lazy(() => import("../componetsPart/Card"));
 
 const HomePage = () => {
   let slides = [

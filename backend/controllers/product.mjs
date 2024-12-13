@@ -99,7 +99,6 @@ export const editProduct = asyncWrapper(async (req, res) => {
 
 export const deleteProduct = asyncWrapper(async (req, res) => {
   const { id } = req.query;
-  console.log("Received ID:", id);
 
   if (!id) {
     return res.status(400).json({ message: "Missing ID parameter" });

@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { FaArrowLeft, FaRegEyeSlash, FaRegEye } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
-import ErrorMessage from "./ErrorMessage";
+import ErrorMessage from "../componetsPart/ErrorMessage";
 import axios from "axios";
-import Spinner from "./Spinner";
+import Spinner from "../componetsPart/Spinner";
 
 const Login = () => {
   const [email, setEmail] = useState("");

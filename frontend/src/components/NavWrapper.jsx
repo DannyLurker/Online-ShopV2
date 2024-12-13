@@ -1,6 +1,6 @@
 import React, { useState, Suspense, useEffect } from "react";
 import { Outlet, Link, useNavigate } from "react-router-dom";
-import Spinner from "./Spinner";
+import Spinner from "../componetsPart/Spinner";
 import axios from "axios";
 import { LuDoorOpen } from "react-icons/lu";
 
