@@ -8,15 +8,19 @@ import { CiSearch } from "react-icons/ci";
 const MarketPlace = () => {
   const [productDatas, setProductDatas] = useState([]);
   const [search, setSearch] = useState("");
+  const [page, setPage] = useState(0);
+  const [productsLength, setProductsLenght] = useState(0);
 
   const getData = async () => {
     try {
       const response = await axios.get(`http://localhost:3000/marketplace`, {
         params: {
           search: search,
+          page: page,
         },
       });
       setProductDatas(response?.data?.products);
+      setProductsLenght(response?.data?.productsLength);
     } catch (e) {
       console.log("Error:", e.response?.data || e.message);
     }
@@ -24,7 +28,7 @@ const MarketPlace = () => {
 
   useEffect(() => {
     getData();
-  }, [search]);
+  }, [search, page]);
 
   return (
     <>
@@ -58,6 +62,17 @@ const MarketPlace = () => {
               </Card>
             </div>
           ))}
+        </div>
+      )}
+
+      {productsLength > 60 && (
+        <div className="fixed bottom-4 left-1/2">
+          <button
+            className="button w-[102px] rounded-sm shadow-sm"
+            onClick={() => setPage(page + 1)}
+          >
+            Load more
+          </button>
         </div>
       )}
     </>

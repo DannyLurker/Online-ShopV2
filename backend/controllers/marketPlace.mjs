@@ -8,7 +8,8 @@ const formatPrice = (price) =>
   }).format(price);
 
 export const getMarketPlace = asyncWrapper(async (req, res) => {
-  const { search } = req.query;
+  const { search, page } = req.query;
+  const limitData = 60 + page * 60;
 
   let products;
 
@@ -17,11 +18,15 @@ export const getMarketPlace = asyncWrapper(async (req, res) => {
       .find({
         name: { $regex: search, $options: "i" },
       })
-      .limit(60)
+      .limit(limitData)
       .lean();
   } else {
-    products = await userProductModel.aggregate([{ $sample: { size: 60 } }]);
+    products = await userProductModel.aggregate([
+      { $sample: { size: limitData } },
+    ]);
   }
+
+  const productsLength = await userProductModel.find();
 
   const sampledProducts = await userProductModel.aggregate([
     { $sample: { size: 24 } },
@@ -47,5 +52,6 @@ export const getMarketPlace = asyncWrapper(async (req, res) => {
     message: "Successful get the data",
     products: formattedProducts,
     productsHomePage: formattedProductsHomePage,
+    productsLength: productsLength.length,
   });
 });
