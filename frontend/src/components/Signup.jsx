@@ -52,7 +52,7 @@ const Signup = () => {
 
       <div className="relative bg-[#cdb4db] w-[280px] h-[330px] sm:w-[320px] sm:h-[370px] md:w-[350px] md:h-[400px] rounded-md shadow-md opacity-75 p-2">
         <div className="flex justify-center mt-2 flex-col text-center px-2 mb-3">
-          <h1 className="text-3xl md:text-4xl">Sign Up</h1>
+          <h1 className="text-3xl font-bold md:text-4xl">Sign Up</h1>
           <p className="sm:text-xl md:text-2xl mt-2">
             Already Have an Account?
             <a href="/login" className="text-blue-500">

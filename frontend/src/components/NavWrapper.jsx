@@ -2,7 +2,7 @@ import React, { useState, Suspense, useEffect } from "react";
 import { Outlet, Link, useNavigate } from "react-router-dom";
 import Spinner from "../componetsPart/Spinner";
 import axios from "axios";
-import { LuDoorOpen } from "react-icons/lu";
+import { LuDoorOpen, LuWallet } from "react-icons/lu";
 
 const NavWrapper = () => {
   const [isCheck, setIsCheck] = useState(false);
@@ -63,7 +63,7 @@ const NavWrapper = () => {
   }, []);
 
   return (
-    <div className="bg-gradient-to-tr from-[#a2d2ff] to-[#bde0fe] min-h-screen max-h-fit pt-16">
+    <div className="pt-16">
       <header className="fixed top-0 left-0 w-full bg-[#cdb4db] z-20">
         <nav className="flex justify-between items-center p-5 w-[92%] mx-auto">
           <div>
@@ -150,9 +150,20 @@ const NavWrapper = () => {
                   <h3 className="text-lg font-bold">
                     {userData.name ? userData.name : "user"}
                   </h3>
-                  <p className="py-4">{`Created when: ${
+                  <p className="mb-2">{`Created when: ${
                     userData.createdAt ? userData.createdAt : `Date...`
                   }`}</p>
+                  {userData.createdAt ? (
+                    <a href="/wallet">
+                      <div className="flex">
+                        <LuWallet className="w-8 h-8 mb-2 cursor-pointer" />
+                        <span className="font-bold text-xl mr-1">:</span>
+                        <p className="text-xl">{userData.wallet}</p>
+                      </div>
+                    </a>
+                  ) : (
+                    ""
+                  )}
                   {userData.createdAt ? (
                     <LuDoorOpen
                       onClick={logOut}
@@ -191,16 +202,27 @@ const NavWrapper = () => {
               />
               <label htmlFor="user-modal1" className="modal z-10">
                 <label
-                  htmlFor="user-modal1"
-                  className="h-fit w-64 scale-90 overflow-y-auto overscroll-contain rounded-lg bg-[#ffc8dd] p-6 text-black shadow-2xl transition "
+                  htmlFor=""
+                  className="h-fit w-64 scale-90 overflow-y-auto overscroll-contain rounded-lg bg-[#ffc8dd] p-6 text-black shadow-2xl transition"
                 >
                   <h3 className="text-lg font-bold">
                     {userData.name ? userData.name : "user"}
                   </h3>
-                  <p className="py-4">{`Created when: ${
+                  <p className="mb-2">{`Created when: ${
                     userData.createdAt ? userData.createdAt : `Date...`
                   }`}</p>
-                  {userData.name ? (
+                  {userData.createdAt ? (
+                    <a href="/wallet">
+                      <div className="flex">
+                        <LuWallet className="w-8 h-8 mb-2 cursor-pointer" />
+                        <span className="font-bold text-xl mr-1">:</span>
+                        <p className="text-xl">{userData.wallet}</p>
+                      </div>
+                    </a>
+                  ) : (
+                    ""
+                  )}
+                  {userData.createdAt ? (
                     <LuDoorOpen
                       onClick={logOut}
                       className="w-8 h-8 cursor-pointer"

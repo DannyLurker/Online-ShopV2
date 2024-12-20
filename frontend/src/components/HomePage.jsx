@@ -17,7 +17,7 @@ const HomePage = () => {
   const getData = async () => {
     try {
       const response = await axios.get(`http://localhost:3000/marketplace`);
-      setProducts(response.data.products);
+      setProducts(response.data.productsHomePage);
     } catch (e) {
       console.log(e.response?.data?.message || e.message);
     }

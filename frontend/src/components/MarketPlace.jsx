@@ -9,7 +9,8 @@ const MarketPlace = () => {
   const [productDatas, setProductDatas] = useState([]);
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(0);
-  const [productsLength, setProductsLenght] = useState(0);
+  const [productsLength, setProductsLength] = useState(0);
+  const [imageUrls, setImageUrls] = useState({});
 
   const getData = async () => {
     try {
@@ -20,14 +21,44 @@ const MarketPlace = () => {
         },
       });
       setProductDatas(response?.data?.products);
-      setProductsLenght(response?.data?.productsLength);
+      setProductsLength(response?.data?.productsLength);
     } catch (e) {
       console.log("Error:", e.response?.data || e.message);
     }
   };
 
+  const fetchImages = async () => {
+    try {
+      const productIds = productDatas.map((product) => product.productId);
+
+      productIds.forEach(async (id) => {
+        const response = await axios.get(
+          `http://localhost:3000/imageDownload`,
+          {
+            responseType: "blob",
+            params: { productId: id },
+          }
+        );
+
+        const imageUrl = URL.createObjectURL(response);
+        setImageUrls((prev) => ({
+          ...prev,
+          [id]: imageUrl,
+        }));
+      });
+    } catch (e) {
+      console.log("Error:", e.response?.data || e.message);
+    }
+  };
+
+  console.log(imageUrls);
+
   useEffect(() => {
-    getData();
+    const fetchAllData = async () => {
+      await getData();
+      await fetchImages();
+    };
+    fetchAllData();
   }, [search, page]);
 
   return (
@@ -54,7 +85,7 @@ const MarketPlace = () => {
               <Card
                 name={product.name}
                 price={product.price}
-                imgUrl={product.imageUrl}
+                imgUrl={imageUrls[product.productId]}
               >
                 <Link to={`/information/${product._id}`}>
                   <BsInfoCircle className="w-10 h-6 sm:w-12 sm:h-8 mt-1.5" />
@@ -65,7 +96,7 @@ const MarketPlace = () => {
         </div>
       )}
 
-      {productsLength > 60 && (
+      {productsLength > 24 && (
         <div className="fixed bottom-4 left-1/2">
           <button
             className="button w-[102px] rounded-sm shadow-sm"

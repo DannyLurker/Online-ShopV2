@@ -1,6 +1,7 @@
 import asyncWrapper from "../middleware/asyncWrapper.mjs";
 import { userProductModel } from "../model/model.mjs";
 import generatedObjectId from "../utils/generatedObjectId.mjs";
+import formatPrice from "../utils/formatPrice.mjs";
 
 export const getProduct = asyncWrapper(async (req, res) => {
   const userId = req.user._id;
@@ -15,10 +16,7 @@ export const getProduct = asyncWrapper(async (req, res) => {
   // Format harga setiap produk secara terpisah
   const formattedProducts = products.map((product) => ({
     ...product._doc,
-    price: new Intl.NumberFormat(`id-ID`, {
-      style: `currency`,
-      currency: `IDR`,
-    }).format(product.price),
+    price: formatPrice(product.price),
   }));
 
   return res.status(200).json({
@@ -29,7 +27,6 @@ export const getProduct = asyncWrapper(async (req, res) => {
 
 export const postProduct = asyncWrapper(async (req, res) => {
   const { name, description, price } = req.body;
-  console.log("file :" + req.file);
 
   if (!req.file) {
     return res.status(400).json({ message: "Image is required" });

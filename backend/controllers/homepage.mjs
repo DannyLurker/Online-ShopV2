@@ -1,5 +1,6 @@
 import { userLoginModel } from "../model/model.mjs";
 import asyncWrapper from "../middleware/asyncWrapper.mjs";
+import formatPrice from "../utils/formatPrice.mjs";
 
 // HOMEPAGE ROUTE FOR GET DATA
 export const getDataHomePage = asyncWrapper(async (req, res) => {
@@ -21,8 +22,14 @@ export const getDataHomePage = asyncWrapper(async (req, res) => {
     timeZone: "Asia/Jakarta",
   }).format(findUser.createdAt);
 
+  const formattedNumber = new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
+  }).format(findUser.wallet);
+
   return res.status(200).json({
     name: findUser.name,
     createdAt: formattedDate,
+    wallet: formattedNumber,
   });
 });

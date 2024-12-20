@@ -25,9 +25,8 @@ userImageStorageConnection.on("error", (err) => {
 });
 
 //CONFIGURATION GFS & MULTER
-let gfs;
+export let gfs;
 userImageStorageConnection.once("open", () => {
-  console.log("MongoDB connected for image storage");
   gfs = new mongo.GridFSBucket(userImageStorageConnection.db, {
     bucketName: "uploads",
   });
@@ -55,18 +54,14 @@ const storage = new GridFsStorage({
   },
 });
 
-const upload = multer({
+export const upload = multer({
   storage,
   fileFilter: (req, file, callback) => {
     if (!file) {
       console.log("No file uploaded");
       return callback(new Error("File is required"), false);
     }
-    if (
-      file.mimetype === "image/png" ||
-      file.mimetype === "image/jpg" ||
-      file.mimetype === "image/jpeg"
-    ) {
+    if (file.mimetype === "image/jpg" || file.mimetype === "image/jpeg") {
       callback(null, true);
     } else {
       console.log("Invalid file type:", file.mimetype);
@@ -77,5 +72,3 @@ const upload = multer({
     fileSize: 1024 * 1024 * 5, // 5MB
   },
 });
-
-export default upload;

@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Card from "../componetsPart/Card.jsx";
 import { IoPencilOutline } from "react-icons/io5";
 import { MdDelete } from "react-icons/md";
@@ -9,7 +9,6 @@ import Popup from "../componetsPart/Popup.jsx";
 const Product = () => {
   const [productDatas, setProductDatas] = useState([]);
   const [error, setError] = useState("");
-  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [id, setId] = useState("");
 

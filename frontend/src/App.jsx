@@ -13,6 +13,7 @@ const AddProduct = lazy(() => import("./components/AddProduct"));
 const MarketPlace = lazy(() => import("./components/MarketPlace"));
 const Information = lazy(() => import("./components/Information"));
 const EditProduct = lazy(() => import("./components/EditProduct"));
+const Wallet = lazy(() => import("./components/Wallet"));
 
 function App() {
   const [auth, setAuth] = useState(false);
@@ -33,7 +34,7 @@ function App() {
       }
     };
     getUser();
-  }, []);
+  }, [auth]);
 
   return (
     <>
@@ -48,6 +49,7 @@ function App() {
                 <Route path="/product" element={<Product />} />
                 <Route path="/product/add" element={<AddProduct />} />
                 <Route path="/product/edit/:id" element={<EditProduct />} />
+                <Route path="/wallet" element={<Wallet />} />
               </Route>
             </Route>
 

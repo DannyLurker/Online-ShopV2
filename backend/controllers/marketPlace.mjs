@@ -1,32 +1,15 @@
 import asyncWrapper from "../middleware/asyncWrapper.mjs";
 import { userProductModel } from "../model/model.mjs";
-
-const formatPrice = (price) =>
-  new Intl.NumberFormat("id-ID", {
-    style: "currency",
-    currency: "IDR",
-  }).format(price);
+import { products, findProducts } from "../utils/findProducts.mjs";
+import formatPrice from "../utils/formatPrice.mjs";
 
 export const getMarketPlace = asyncWrapper(async (req, res) => {
   const { search, page } = req.query;
-  const limitData = 60 + page * 60;
-
-  let products;
-
-  if (search) {
-    products = await userProductModel
-      .find({
-        name: { $regex: search, $options: "i" },
-      })
-      .limit(limitData)
-      .lean();
-  } else {
-    products = await userProductModel.aggregate([
-      { $sample: { size: limitData } },
-    ]);
-  }
+  const limitData = 24 + page * 24;
 
   const productsLength = await userProductModel.find();
+
+  await findProducts(search, limitData);
 
   const sampledProducts = await userProductModel.aggregate([
     { $sample: { size: 24 } },

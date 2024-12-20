@@ -21,6 +21,16 @@ const userLoginSchema = new Schema(
       require: true,
       type: String,
     },
+    role: {
+      type: String,
+      default: "user",
+      require: true,
+    },
+    wallet: {
+      type: Number,
+      default: 0,
+      require: true,
+    },
   },
   { timestamps: true }
 );
