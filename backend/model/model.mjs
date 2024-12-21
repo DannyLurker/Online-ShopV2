@@ -68,3 +68,36 @@ export const userProductModel = userProductConnection.model(
   "user-products-OSV2",
   userProductSchema
 );
+
+const userCartSchema = new Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+  },
+  name: {
+    require: true,
+    type: String,
+  },
+  description: {
+    require: true,
+    type: String,
+  },
+  price: {
+    require: true,
+    type: Number,
+    min: 1,
+  },
+  productId: {
+    require: true,
+    type: String,
+  },
+  informationId: {
+    require: true,
+    type: mongoose.Schema.Types.ObjectId,
+  },
+});
+
+export const userCartModel = userCartsConnection.model(
+  "user-cart-OSV2",
+  userCartSchema
+);

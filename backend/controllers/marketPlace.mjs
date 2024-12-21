@@ -15,7 +15,7 @@ export const getMarketPlace = asyncWrapper(async (req, res) => {
     { $sample: { size: 24 } },
   ]);
 
-  if (!products.length && !sampledProducts.length) {
+  if (products.length === 0 && !sampledProducts.length) {
     return res
       .status(404)
       .json({ message: "Data not found or no one sells stuff" });

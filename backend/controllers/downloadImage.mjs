@@ -6,7 +6,7 @@ const downloadImage = asyncWrapper(async (req, res) => {
 
   const cursor = gfs.find({ "metadata.productId": { $in: productId } });
 
-  if (!file.length) {
+  if (!cursor.length) {
     return res.status(404).json({ message: "File not found" });
   }
 

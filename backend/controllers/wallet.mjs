@@ -38,7 +38,6 @@ export const walletFormatNumber = asyncWrapper(async (req, res) => {
 export const postDataWallet = asyncWrapper(async (req, res) => {
   const userId = req.user._id;
   const { balance } = req.body;
-  console.log(balance);
 
   const findUser = await userLoginModel.findOne({ _id: userId });
 

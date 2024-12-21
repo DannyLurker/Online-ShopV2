@@ -23,7 +23,12 @@ import {
 import { getInformaiton } from "../controllers/information.mjs";
 import { logoutUser } from "../controllers/logoutUser.mjs";
 import downloadImage from "../controllers/downloadImage.mjs";
-import { getDataWallet, postDataWallet, walletFormatNumber } from "../controllers/wallet.mjs";
+import {
+  getDataWallet,
+  postDataWallet,
+  walletFormatNumber,
+} from "../controllers/wallet.mjs";
+import { getDataCart, postDataCart } from "../controllers/cart.mjs";
 
 // INITIALIZE EXPRESS
 const Router = express.Router();
@@ -61,6 +66,12 @@ Router.post(`/refresh-token`, postDataRefreshToken);
 
 // MARKETPLACE ROUTE FOR GET EVERY DATA
 Router.get(`/marketplace`, getMarketPlace);
+
+// CART ROUTE FOR GET DATA
+Router.get("/cart", authenticate, getDataCart);
+
+// CART ROUTE FOR POST DATA
+Router.post(`/cart/postData`, authenticate, postDataCart);
 
 // MARKETPLACE ROUTE FOR DOWNLOAD IMAGE
 Router.get(`/imageDownload`, downloadImage);

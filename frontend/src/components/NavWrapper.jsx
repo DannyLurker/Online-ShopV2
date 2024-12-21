@@ -85,7 +85,7 @@ const NavWrapper = () => {
                 </a>
               </li>
               <li>
-                <a className="underline-link" href="#">
+                <a className="underline-link" href="/cart">
                   Cart
                 </a>
               </li>
