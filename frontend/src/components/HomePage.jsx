@@ -4,8 +4,26 @@ import { Link } from "react-router-dom";
 import { BsInfoCircle } from "react-icons/bs";
 const Carousel = lazy(() => import("../componetsPart/Carousel"));
 const Card = lazy(() => import("../componetsPart/Card"));
+import { LuShoppingCart } from "react-icons/lu";
+import CartPopup from "../componetsPart/CartPopup";
 
 const HomePage = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [productName, setProductName] = useState("");
+  const [productPrice, setProductPrice] = useState("");
+  const [productDescription, setProductDescription] = useState("");
+  const [productId, setProdcutId] = useState("");
+  const [productInformationId, setProductInformationId] = useState("");
+
+  function checkIsOpen(name, price, description, id, informationId) {
+    setIsOpen((prev) => !prev);
+    setProductName(name);
+    setProductPrice(price);
+    setProductDescription(description);
+    setProdcutId(id);
+    setProductInformationId(informationId);
+  }
+
   let slides = [
     `../dea3499418a115708ebd31a95c89789b.jpg`,
     `../hhkb-hybrid-type-s.jpg`,
@@ -28,7 +46,7 @@ const HomePage = () => {
   }, []);
 
   return (
-    <div>
+    <>
       <div className="w-[90%] 2xl:w-[1400px] h-[60%] mx-auto mt-12 border-black rounded-md shadow-md mb-5">
         <Carousel slides={slides} autoSlide={true} />
       </div>
@@ -44,12 +62,36 @@ const HomePage = () => {
                 <Link to={`/information/${product._id}`}>
                   <BsInfoCircle className="w-10 h-6 sm:w-12 sm:h-8 mt-1.5" />
                 </Link>
+                <div
+                  onClick={() =>
+                    checkIsOpen(
+                      product.name,
+                      product.price,
+                      product.description,
+                      product.productId,
+                      product._id
+                    )
+                  }
+                >
+                  <LuShoppingCart className="w-10 h-6 sm:w-12 sm:h-8 mt-1.5 cursor-pointer" />
+                </div>
               </Card>
             </div>
           ))}
         </div>
       )}
-    </div>
+
+      {isOpen && (
+        <CartPopup
+          setIsOpen={checkIsOpen}
+          setProductName={productName}
+          setProductPrice={productPrice}
+          setProductDescription={productDescription}
+          setProductId={productId}
+          setInformationId={productInformationId}
+        />
+      )}
+    </>
   );
 };
 

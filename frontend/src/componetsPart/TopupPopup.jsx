@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { IoCloseSharp } from "react-icons/io5";
 
-const PopupBuy = ({ setTogglePopup, OSV2_Point }) => {
+const TopupPopup = ({ setTogglePopup, OSV2_Point }) => {
   const [formatBalance, setFormatBalance] = useState("");
   const [unFormatBalance, setUnFormatBalance] = useState(0);
 
@@ -65,4 +65,4 @@ const PopupBuy = ({ setTogglePopup, OSV2_Point }) => {
   );
 };
 
-export default PopupBuy;
+export default TopupPopup;

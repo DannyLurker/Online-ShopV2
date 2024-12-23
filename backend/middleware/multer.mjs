@@ -61,7 +61,11 @@ export const upload = multer({
       console.log("No file uploaded");
       return callback(new Error("File is required"), false);
     }
-    if (file.mimetype === "image/jpg" || file.mimetype === "image/jpeg") {
+    if (
+      file.mimetype === "image/jpg" ||
+      file.mimetype === "image/jpeg" ||
+      file.mimetype === "image/png"
+    ) {
       callback(null, true);
     } else {
       console.log("Invalid file type:", file.mimetype);

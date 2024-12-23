@@ -24,11 +24,21 @@ import { getInformaiton } from "../controllers/information.mjs";
 import { logoutUser } from "../controllers/logoutUser.mjs";
 import downloadImage from "../controllers/downloadImage.mjs";
 import {
+  changeDataWallet,
   getDataWallet,
   postDataWallet,
   walletFormatNumber,
 } from "../controllers/wallet.mjs";
-import { getDataCart, postDataCart } from "../controllers/cart.mjs";
+import {
+  deleteDataCart,
+  getDataCart,
+  postDataCart,
+} from "../controllers/cart.mjs";
+import {
+  deleteDataHistory,
+  getDataHistory,
+  postDataHistory,
+} from "../controllers/history.mjs";
 
 // INITIALIZE EXPRESS
 const Router = express.Router();
@@ -61,6 +71,9 @@ Router.post("/wallet/topup", authenticate, postDataWallet);
 // WALLET ROUTE FOR FORMAT NUMBER
 Router.post("/wallet/formatNumber", walletFormatNumber);
 
+// WALLET ROUTE FOR CHANGE DATA
+Router.put("/wallet/changeData", authenticate, changeDataWallet);
+
 // REFRESH-TOKEN ROUTE
 Router.post(`/refresh-token`, postDataRefreshToken);
 
@@ -72,6 +85,9 @@ Router.get("/cart", authenticate, getDataCart);
 
 // CART ROUTE FOR POST DATA
 Router.post(`/cart/postData`, authenticate, postDataCart);
+
+// CART ROUTE FOR DELETE DATA
+Router.delete(`/cart/deleteData`, deleteDataCart);
 
 // MARKETPLACE ROUTE FOR DOWNLOAD IMAGE
 Router.get(`/imageDownload`, downloadImage);
@@ -105,6 +121,15 @@ Router.put(
   validateProduct,
   editProduct
 );
+
+// HISTORY ROUTE FOR GET DATA
+Router.get(`/history`, authenticate, getDataHistory);
+
+// HISTORY ROUTE FOR POST DATA
+Router.post(`/history/addData`, authenticate, postDataHistory);
+
+// HISTORY ROUTE FOR DELETE DATA
+Router.delete(`/history/deleteData`, deleteDataHistory);
 
 // LOGOUT
 Router.delete(`/logout`, logoutUser);

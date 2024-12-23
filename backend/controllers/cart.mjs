@@ -54,3 +54,18 @@ export const postDataCart = asyncWrapper(async (req, res) => {
 
   return res.status(200).json({ message: "Cart successfully added" });
 });
+
+export const deleteDataCart = asyncWrapper(async (req, res) => {
+  const { _id } = req.query;
+
+  if (!_id) {
+    return res.status(404).json({ message: "Id does not exist" });
+  }
+
+  const findData = await userCartModel.findById(_id);
+  if (!findData) {
+    return res.status(404).json({ message: "Data not found" });
+  }
+  await userCartModel.deleteOne({ _id });
+  return res.status(202).json({ message: "Data successfully deleted" });
+});

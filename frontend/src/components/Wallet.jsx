@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import TopupCard from "../componetsPart/TopupCard";
-import PopupBuy from "../componetsPart/PopupBuy";
+import TopupPopup from "../componetsPart/TopupPopup";
 
 const Wallet = () => {
   const [name, setName] = useState("");
@@ -59,7 +59,7 @@ const Wallet = () => {
       </div>
 
       {isOpen && (
-        <PopupBuy setTogglePopup={togglePopup} OSV2_Point={totalBalance} />
+        <TopupPopup setTogglePopup={togglePopup} OSV2_Point={totalBalance} />
       )}
     </>
   );

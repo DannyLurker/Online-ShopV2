@@ -95,7 +95,7 @@ const NavWrapper = () => {
                 </a>
               </li>
               <li>
-                <a className="underline-link" href="#">
+                <a className="underline-link" href="/history">
                   History
                 </a>
                 {userData.createdAt ? (

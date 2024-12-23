@@ -101,3 +101,26 @@ export const userCartModel = userCartsConnection.model(
   "user-cart-OSV2",
   userCartSchema
 );
+
+const userHistorySchema = new Schema(
+  {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      require: true,
+    },
+    name: {
+      require: true,
+      type: String,
+    },
+    price: {
+      require: true,
+      type: Number,
+    },
+  },
+  { timestamps: true }
+);
+
+export const userHistoryModel = userHistoryConnection.model(
+  "user-history-OSV2",
+  userHistorySchema
+);

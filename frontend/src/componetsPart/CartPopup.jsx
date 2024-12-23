@@ -38,7 +38,7 @@ const CartPopup = ({
           <IoCloseSharp className="w-5 h-5 sm:w-10 sm:h-10 font-bold" />
         </p>
         <h2 className="mb-4 sm:mb-8 sm:text-xl">
-          Are you to add {setProductName} into cart ?
+          Are you sure to add {setProductName} into cart ?
         </h2>
         <button
           onClick={postData}
