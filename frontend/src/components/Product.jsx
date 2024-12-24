@@ -11,6 +11,7 @@ const Product = () => {
   const [error, setError] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [id, setId] = useState("");
+  const [imageUrls, setImageUrls] = useState([]);
 
   const togglePopup = () => {
     setIsOpen((prev) => !prev);
@@ -44,8 +45,29 @@ const Product = () => {
     }
   };
 
+  const fetchImages = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3000/downloadManyImage`,
+        {
+          responseType: "blob",
+        }
+      );
+
+      const imageSrc = URL.createObjectURL(response.data);
+      setImageUrls((prev) => [...prev, imageSrc]);
+    } catch (e) {
+      console.log("Error:", e.response?.data || e.message);
+    }
+  };
+
+  const fetchAllData = async () => {
+    await getData();
+    await fetchImages();
+  };
+
   useEffect(() => {
-    getData();
+    fetchAllData();
   }, []);
 
   return (
@@ -72,7 +94,7 @@ const Product = () => {
               <Card
                 name={product.name}
                 price={product.price}
-                imgUrl={product.proId}
+                imgUrl={imageUrls[index]}
               >
                 <div className="flex mt-1.5">
                   <Link to={`/product/edit/${product._id}`}>

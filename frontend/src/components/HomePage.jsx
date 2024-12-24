@@ -14,6 +14,7 @@ const HomePage = () => {
   const [productDescription, setProductDescription] = useState("");
   const [productId, setProdcutId] = useState("");
   const [productInformationId, setProductInformationId] = useState("");
+  const [imageUrls, setImageUrls] = useState([]);
 
   function checkIsOpen(name, price, description, id, informationId) {
     setIsOpen((prev) => !prev);
@@ -41,8 +42,29 @@ const HomePage = () => {
     }
   };
 
+  const fetchImages = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3000/downloadManyImage`,
+        {
+          responseType: "blob",
+        }
+      );
+
+      const imageSrc = URL.createObjectURL(response.data);
+      setImageUrls((prev) => [...prev, imageSrc]);
+    } catch (e) {
+      console.log("Error:", e.response?.data || e.message);
+    }
+  };
+
+  const fetchAllData = async () => {
+    await getData();
+    await fetchImages();
+  };
+
   useEffect(() => {
-    getData();
+    fetchAllData();
   }, []);
 
   return (
@@ -57,9 +79,9 @@ const HomePage = () => {
               <Card
                 name={product.name}
                 price={product.price}
-                imgUrl={product.imageUrl}
+                imgUrl={imageUrls[index]}
               >
-                <Link to={`/information/${product._id}`}>
+                <Link to={`/information/${product.productId}`}>
                   <BsInfoCircle className="w-10 h-6 sm:w-12 sm:h-8 mt-1.5" />
                 </Link>
                 <div

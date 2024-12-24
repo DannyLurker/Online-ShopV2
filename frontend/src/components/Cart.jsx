@@ -15,6 +15,7 @@ const Cart = () => {
   const [cart_Id, setCart_Id] = useState("");
   const [IsOpen, setIsOpen] = useState(false);
   const [cartIsOpen, setCartIsOpen] = useState(false);
+  const [imageUrls, setImageUrls] = useState([]);
 
   function checkIsOpen() {
     setIsOpen((prev) => !prev);
@@ -46,8 +47,29 @@ const Cart = () => {
     }
   };
 
+  const fetchImages = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3000/downloadManyImage`,
+        {
+          responseType: "blob",
+        }
+      );
+
+      const imageSrc = URL.createObjectURL(response.data);
+      setImageUrls((prev) => [...prev, imageSrc]);
+    } catch (e) {
+      console.log("Error:", e.response?.data || e.message);
+    }
+  };
+
+  const fetchAllData = async () => {
+    await getData();
+    await fetchImages();
+  };
+
   useEffect(() => {
-    getData();
+    fetchAllData();
   }, []);
   return (
     <>
@@ -62,8 +84,12 @@ const Cart = () => {
         {cartsData &&
           cartsData.map((cart, index) => (
             <div key={index}>
-              <Card name={cart.name} price={cart.price}>
-                <Link to={`/information/${cart.informationId}`}>
+              <Card
+                name={cart.name}
+                price={cart.price}
+                imgUrl={imageUrls[index]}
+              >
+                <Link to={`/information/${cart.productId}`}>
                   <BsInfoCircle className="w-10 h-6 sm:w-12 sm:h-8 mt-1.5" />
                 </Link>
                 <button

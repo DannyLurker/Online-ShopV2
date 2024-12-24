@@ -52,7 +52,7 @@ const History = () => {
             {historyData.length > 0 ? (
               historyData.map((data, index) => (
                 <tr key={index} className="border-2">
-                  <td className="border-r-2 text-left px-1">{data._id}</td>
+                  <td className="border-r-2 text-left px-1">{index + 1}</td>
                   <td className="border-r-2 text-left px-1">
                     {data.createdAt}
                   </td>

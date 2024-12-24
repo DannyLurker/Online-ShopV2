@@ -8,7 +8,7 @@ export const getInformaiton = asyncWrapper(async (req, res) => {
     return res.status(400).json({ message: "Missing ID parameter" });
   }
 
-  const product = await userProductModel.findOne({ _id: id });
+  const product = await userProductModel.findOne({ productId: id });
 
   if (!product) {
     return res.status(404).json({ message: "Product not found" });

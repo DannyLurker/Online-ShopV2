@@ -12,7 +12,7 @@ const MarketPlace = () => {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(0);
   const [productsLength, setProductsLength] = useState(0);
-  const [imageUrls, setImageUrls] = useState({});
+  const [imageUrls, setImageUrls] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [productName, setProductName] = useState("");
   const [productPrice, setProductPrice] = useState("");
@@ -32,12 +32,16 @@ const MarketPlace = () => {
 
   const getData = async () => {
     try {
-      const response = await axios.get(`http://localhost:3000/marketplace`, {
-        params: {
-          search: search,
-          page: page,
-        },
-      });
+      const response = await axios.get(
+        `http://localhost:3000/marketplace`,
+
+        {
+          params: {
+            search: search,
+            page: page,
+          },
+        }
+      );
       setProductDatas(response?.data?.products);
       setProductsLength(response?.data?.productsLength);
     } catch (e) {
@@ -48,33 +52,30 @@ const MarketPlace = () => {
 
   const fetchImages = async () => {
     try {
-      const productIds = productDatas.map((product) => product.productId);
+      const response = await axios.get(
+        `http://localhost:3000/downloadManyImage`,
+        {
+          responseType: "blob",
+          params: {
+            search,
+            page,
+          },
+        }
+      );
 
-      productIds.forEach(async (id) => {
-        const response = await axios.get(
-          `http://localhost:3000/imageDownload`,
-          {
-            responseType: "blob",
-            params: { productId: id },
-          }
-        );
-
-        const imageUrl = URL.createObjectURL(response);
-        setImageUrls((prev) => ({
-          ...prev,
-          [id]: imageUrl,
-        }));
-      });
+      const imageSrc = URL.createObjectURL(response.data);
+      setImageUrls((prev) => [...prev, imageSrc]);
     } catch (e) {
       console.log("Error:", e.response?.data || e.message);
     }
   };
 
+  const fetchAllData = async () => {
+    await getData();
+    await fetchImages();
+  };
+
   useEffect(() => {
-    const fetchAllData = async () => {
-      await getData();
-      await fetchImages();
-    };
     fetchAllData();
   }, [search, page]);
 
@@ -107,21 +108,21 @@ const MarketPlace = () => {
           {productDatas.map((product, index) => (
             <div key={index}>
               <Card
-                name={product.name}
+                name={product._doc.name}
                 price={product.price}
-                imgUrl={imageUrls[product.productId]}
+                imgUrl={imageUrls[index]}
               >
-                <Link to={`/information/${product._id}`}>
+                <Link to={`/information/${product._doc.productId}`}>
                   <BsInfoCircle className="w-10 h-6 sm:w-12 sm:h-8 mt-1.5" />
                 </Link>
                 <div
                   onClick={() =>
                     checkIsOpen(
-                      product.name,
+                      product._doc.name,
                       product.price,
-                      product.description,
-                      product.productId,
-                      product._id
+                      product._doc.description,
+                      product._doc.productId,
+                      product._doc._id
                     )
                   }
                 >

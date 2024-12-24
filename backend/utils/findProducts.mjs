@@ -10,8 +10,6 @@ export const findProducts = async (search, limitData) => {
       .limit(limitData)
       .lean();
   } else {
-    products = await userProductModel.aggregate([
-      { $sample: { size: limitData } },
-    ]);
+    products = await userProductModel.find().limit(limitData);
   }
 };

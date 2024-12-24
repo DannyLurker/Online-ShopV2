@@ -6,6 +6,7 @@ import { FaArrowLeft } from "react-icons/fa";
 const Information = () => {
   const [productData, setProductData] = useState({});
   const { id } = useParams();
+  const [imageSrc, setImageSrc] = useState("");
 
   const getData = async () => {
     try {
@@ -18,8 +19,29 @@ const Information = () => {
     }
   };
 
-  useEffect(() => {
+  const fetchImage = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3000/downloadOneImage/${id}`,
+        {
+          responseType: `blob`,
+        }
+      );
+
+      const imageUrl = URL.createObjectURL(response.data);
+      setImageSrc(imageUrl);
+    } catch (e) {
+      console.log(e.response?.data?.message || e.message);
+    }
+  };
+
+  const executeFunction = () => {
     getData();
+    fetchImage();
+  };
+
+  useEffect(() => {
+    executeFunction();
   }, []);
 
   return (
@@ -28,8 +50,8 @@ const Information = () => {
         <h1 className="text-5xl font-bold mb-4">Information</h1>
         <div className="bg-[#bde0fe] min-h-fit w-[270px] sm:w-[550px]  md:w-[650px] lg:w-[960px] rounded-md shadow-md p-2">
           <img
-            src={`http://localhost:3000${productData.imageUrl}`}
-            alt={`${productData.imageUrl}`}
+            src={imageSrc}
+            alt={`${imageSrc}`}
             className="rounded-md  max-h-[200px]  sm:max-h-[250px]  md:max-h-[300px]  lg:max-h-[400px] mx-auto mt-2"
           />
           <h2 className="sm:text-xl font-medium">{productData.name}</h2>

@@ -17,7 +17,7 @@ if (!imageStorageURL) {
   process.exit(1);
 }
 
-const userImageStorageConnection = createConnection(imageStorageURL);
+export const userImageStorageConnection = createConnection(imageStorageURL);
 
 userImageStorageConnection.on("error", (err) => {
   console.error("MongoDB connection error:", err);
@@ -35,21 +35,16 @@ userImageStorageConnection.once("open", () => {
 const storage = new GridFsStorage({
   url: imageStorageURL,
   file: async (req, file) => {
-    if (!file) {
-      throw new Error("File is required for storage");
-    }
-
     const productId = generatedObjectId;
 
     if (!productId) {
       throw new Error("ProductId is missing");
     }
+
     return {
       filename: `${Date.now()}-${file.originalname}`,
       bucketName: "uploads",
-      metadata: {
-        productId: generatedObjectId,
-      },
+      metadata: { productId },
     };
   },
 });

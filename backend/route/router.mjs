@@ -22,7 +22,10 @@ import {
 } from "../controllers/product.mjs";
 import { getInformaiton } from "../controllers/information.mjs";
 import { logoutUser } from "../controllers/logoutUser.mjs";
-import downloadImage from "../controllers/downloadImage.mjs";
+import {
+  downloadManyImage,
+  downloadOneImage,
+} from "../controllers/downloadImage.mjs";
 import {
   changeDataWallet,
   getDataWallet,
@@ -89,8 +92,11 @@ Router.post(`/cart/postData`, authenticate, postDataCart);
 // CART ROUTE FOR DELETE DATA
 Router.delete(`/cart/deleteData`, deleteDataCart);
 
-// MARKETPLACE ROUTE FOR DOWNLOAD IMAGE
-Router.get(`/imageDownload`, downloadImage);
+// DOWNLOAD ONE IMAGE
+Router.get(`/downloadOneImage/:id`, downloadOneImage);
+
+// DOWNLOAD MANY IMAGE
+Router.get(`/downloadManyImage`, downloadManyImage);
 
 // PRODUCT ROUTE FOR GET DATA
 Router.get(`/product`, authenticate, getProduct);
